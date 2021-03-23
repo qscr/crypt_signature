@@ -1,0 +1,30 @@
+name: crypt_signature
+description: crypt
+version: 0.0.1
+author: monakhov
+homepage:
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.20.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  api_event: ^1.1.0
+  shared_preferences: ^2.0.5
+  uuid: ^3.0.2
+  path_provider: ^2.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: ru.krista.crypt.crypt_signature
+        pluginClass: CryptSignaturePlugin
+      ios:
+        pluginClass: CryptSignaturePlugin
