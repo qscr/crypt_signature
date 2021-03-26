@@ -1,4 +1,4 @@
-group 'ru.krista.crypt.crypt_signature'
+group 'ru.krista.crypt'
 version '1.0'
 
 buildscript {

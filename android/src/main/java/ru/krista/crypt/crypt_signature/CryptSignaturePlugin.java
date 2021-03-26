@@ -1,5 +1,6 @@
 package ru.krista.crypt;
 
+import android.animation.Keyframe;
 import android.content.Context;
 import android.util.Base64;
 
@@ -9,6 +10,7 @@ import org.json.simple.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
@@ -29,8 +31,6 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import ru.CryptoPro.JCP.JCP;
 import ru.CryptoPro.JCSP.CSPConfig;
 import ru.CryptoPro.JCSP.JCSP;
-import ru.krista.io.asn1.core.OID;
-import ru.krista.io.asn1.x509.PublicKeyInfo;
 
 /** CryptSignaturePlugin */
 public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
@@ -172,11 +172,10 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
 
                 log.info(certificate.getPublicKey().getAlgorithm());
 
-                PublicKeyInfo publicKeyInfo = new PublicKeyInfo();
-                publicKeyInfo.decode(certificate.getPublicKey().getEncoded());
+                ru.krista.io.asn1.x509.PublicKeyInfo
 
                 MessageDigest md = MessageDigest.getInstance(
-                        OID.DERToOID(publicKeyInfo.algorithmIdentifier.algorithm.getContent()),
+                        certificate.getPublicKey().getAlgorithm(),
                         JCSP.PROVIDER_NAME
                 );
                 md.update(data);
@@ -187,7 +186,7 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
                 log.info("Сертификат '" + alias + "' распакован");
                 PrivateKey privateKey = (PrivateKey) keyStorePFX.getKey(alias, password.toCharArray());
 
-                Signature signature = Signature.getInstance(JCP.RAW_PREFIX + "with" + privateKey.getAlgorithm(), JCSP.PROVIDER_NAME);
+                Signature signature = Signature.getInstance(certificate.getPublicKey().getAlgorithm() + "with" + privateKey.getAlgorithm(), JCSP.PROVIDER_NAME);
                 signature.initSign(privateKey);
                 signature.update(digest);
                 byte[] sign = signature.sign();

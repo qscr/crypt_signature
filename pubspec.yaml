@@ -25,7 +25,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: ru.krista.crypt.crypt_signature
+        package: ru.krista.crypt
         pluginClass: CryptSignaturePlugin
       ios:
         pluginClass: CryptSignaturePlugin
