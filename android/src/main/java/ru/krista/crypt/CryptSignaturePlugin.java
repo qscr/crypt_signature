@@ -29,6 +29,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import ru.CryptoPro.JCP.JCP;
 import ru.CryptoPro.JCSP.CSPConfig;
 import ru.CryptoPro.JCSP.JCSP;
+import ru.krista.exceptions.FatalError;
 import ru.krista.io.asn1.core.OID;
 import ru.krista.io.asn1.x509.PublicKeyInfo;
 
@@ -124,7 +125,7 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
             if (alias != null) {
                 log.info("Сертификат распакован");
                 X509Certificate certificate = (X509Certificate) keyStorePFX.getCertificate(alias);
-                String certificateInfo = saveCertificateInfo(certificate, alias);
+                String certificateInfo = getCertificateInfo(certificate, alias);
 
                 return new MethodResponse<String>(certificateInfo, MethodResponseCode.SUCCESS);
             } else {
@@ -137,13 +138,14 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
         }
     }
 
-    private String saveCertificateInfo(X509Certificate certificate, String alias) throws CertificateEncodingException {
+    private String getCertificateInfo(X509Certificate certificate, String alias) throws CertificateEncodingException {
         JSONObject obj = new JSONObject();
-        obj.put("certificate", Base64.encodeToString(certificate.getEncoded(), Base64.DEFAULT));
+        obj.put("certificate", Base64.encodeToString(certificate.getEncoded(), Base64.NO_WRAP));
         obj.put("alias", alias);
         obj.put("issuerDN", certificate.getSubjectDN().toString());
         obj.put("notAfterDate", certificate.getNotAfter().toString());
         obj.put("serialNumber", certificate.getSerialNumber().toString());
+        obj.put("algorithm", certificate.getPublicKey().getAlgorithm());
 
         return obj.toJSONString();
     }
@@ -175,8 +177,29 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
                 PublicKeyInfo publicKeyInfo = new PublicKeyInfo();
                 publicKeyInfo.decode(certificate.getPublicKey().getEncoded());
 
+                String algorithm = OID.DERToOID(publicKeyInfo.algorithmIdentifier.algorithm.getContent());
+
+                String digestAlgorithm;
+                String signatureAlgorithm;
+
+                switch (algorithm) {
+                    case "1.2.643.2.2.19":
+                        digestAlgorithm = "1.2.643.2.2.9";
+                        signatureAlgorithm = JCP.RAW_GOST_EL_SIGN_NAME;
+                        break;
+                    case "1.2.643.7.1.1.1.1":
+                        digestAlgorithm = "1.2.643.7.1.1.2.2";
+                        signatureAlgorithm = JCP.RAW_GOST_SIGN_2012_256_NAME;
+                        break;
+                    case "1.2.643.7.1.1.1.2":
+                        digestAlgorithm = "1.2.643.7.1.1.2.3";
+                        signatureAlgorithm = JCP.RAW_GOST_SIGN_2012_512_NAME;
+                        break;
+                    default: throw new FatalError();
+                }
+
                 MessageDigest md = MessageDigest.getInstance(
-                        OID.DERToOID(publicKeyInfo.algorithmIdentifier.algorithm.getContent()),
+                        digestAlgorithm,
                         JCSP.PROVIDER_NAME
                 );
                 md.update(data);
@@ -184,19 +207,18 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
 
                 log.info("Хэш " + Arrays.toString(digest));
 
-                log.info("Сертификат '" + alias + "' распакован");
+                log.info("Сертификат распакован");
                 PrivateKey privateKey = (PrivateKey) keyStorePFX.getKey(alias, password.toCharArray());
 
-                Signature signature = Signature.getInstance(JCP.RAW_PREFIX + "with" + privateKey.getAlgorithm(), JCSP.PROVIDER_NAME);
+                Signature signature = Signature.getInstance(signatureAlgorithm, JCSP.PROVIDER_NAME);
                 signature.initSign(privateKey);
                 signature.update(digest);
                 byte[] sign = signature.sign();
 
                 JSONObject contentJson = new JSONObject();
                 contentJson.put("data", base64Data);
-                contentJson.put("certificate", Base64.encodeToString(certificate.getEncoded(), Base64.DEFAULT));
-                contentJson.put("digestOID", JCP.GOST_DIGEST_2012_256_OID);
-                contentJson.put("sign", Base64.encodeToString(sign, Base64.DEFAULT));
+                contentJson.put("certificate", Base64.encodeToString(certificate.getEncoded(), Base64.NO_WRAP));
+                contentJson.put("sign", Base64.encodeToString(sign, Base64.NO_WRAP));
 
                 return new MethodResponse<String>(contentJson.toString(), MethodResponseCode.SUCCESS);
             } else {

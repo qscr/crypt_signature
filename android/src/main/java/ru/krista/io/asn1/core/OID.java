@@ -2,7 +2,6 @@ package ru.krista.io.asn1.core;
 
 import ru.krista.exceptions.FatalError;
 
-import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.annotation.ElementType;
@@ -195,7 +194,7 @@ public final class OID {
      * @param der массив байт в формате DER
      * @return OID строка
      */
-    public static String DERToOID(@Nullable byte[] der) {
+    public static String DERToOID(byte[] der) {
         return DERToOID(der, false);
     }
 
@@ -206,8 +205,7 @@ public final class OID {
      * @param withTag true, если начальные данные содержат DER заголовок OBJECT_IDENTIFIER
      * @return OID строка
      */
-    @Nullable
-    public static String DERToOID(@Nullable byte[] der, boolean withTag) {
+    public static String DERToOID(byte[] der, boolean withTag) {
         if (der == null)
             return null;
         List<BigInteger> data = new ArrayList<>();

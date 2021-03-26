@@ -90,22 +90,23 @@ class _CertificatesState extends State<Certificates> {
           return Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              Column(
-                children: [
-                  Padding(padding: EdgeInsets.symmetric(vertical: 5.0)),
-                  Text(widget.hint),
-                  Expanded(
-                    child: snapshot.data.isNotEmpty
-                        ? ListView.builder(
-                            padding: EdgeInsets.symmetric(vertical: 10.0),
-                            physics: BouncingScrollPhysics(),
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (context, index) => CertificateWidget(
-                                snapshot.data[index], removeCertificate))
-                        : Center(child: Text("Список сертификатов пуст")),
-                  ),
-                ],
-              ),
+              snapshot.data.isNotEmpty
+                  ? Column(
+                      children: [
+                        Padding(padding: EdgeInsets.symmetric(vertical: 5.0)),
+                        Text(widget.hint),
+                        Expanded(
+                          child: ListView.builder(
+                              padding: EdgeInsets.symmetric(vertical: 10.0),
+                              physics: BouncingScrollPhysics(),
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) =>
+                                  CertificateWidget(
+                                      snapshot.data[index], removeCertificate)),
+                        ),
+                      ],
+                    )
+                  : Center(child: Text("Список сертификатов пуст")),
               GestureDetector(
                 onTap: installCertificate,
                 child: Container(
