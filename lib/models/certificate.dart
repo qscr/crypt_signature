@@ -1,9 +1,10 @@
-import 'dart:convert';
-
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:crypt_signature/models/storage.dart';
 import 'package:uuid/uuid.dart';
 
 class Certificate {
+  static final Storage<Certificate> storage =
+      new Storage<Certificate>(Certificate.fromJson);
+
   final String uuid;
   final String certificate;
   final String alias;
@@ -19,16 +20,6 @@ class Certificate {
       this.notAfterDate,
       this.serialNumber});
 
-  factory Certificate.fromJson(Map<String, dynamic> json) {
-    return new Certificate(
-        uuid: json["uuid"] ?? Uuid().v4(),
-        certificate: json["certificate"] as String,
-        alias: json['alias'] as String,
-        issuerDN: json['issuerDN'] as String,
-        notAfterDate: json['notAfterDate'] as String,
-        serialNumber: json['serialNumber'] as String);
-  }
-
   Map<String, dynamic> toJson() => {
         'uuid': uuid,
         'certificate': certificate,
@@ -38,56 +29,20 @@ class Certificate {
         'serialNumber': serialNumber
       };
 
+  static Certificate fromJson(Map<String, dynamic> json) => Certificate(
+      uuid: json["uuid"] ?? Uuid().v4(),
+      certificate: json["certificate"] as String,
+      alias: json['alias'] as String,
+      issuerDN: json['issuerDN'] as String,
+      notAfterDate: json['notAfterDate'] as String,
+      serialNumber: json['serialNumber'] as String);
+
   @override
-  // TODO:
   // ignore: hash_and_equals
   bool operator ==(other) {
     return (other is Certificate) &&
         other.certificate == certificate &&
         other.serialNumber == serialNumber &&
         other.issuerDN == issuerDN;
-  }
-
-  static Future<List<Certificate>> getCertificates() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<dynamic> list = json.decode(prefs.getString("certificates"));
-
-    if (list == null || list.isEmpty) return [];
-
-    List<Certificate> certificates = [];
-
-    for (Map certificate in list)
-      certificates.add(Certificate.fromJson(certificate));
-
-    return certificates;
-  }
-
-  static Future saveCertificates(List<Certificate> certificates) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("certificates", json.encode(certificates));
-  }
-
-  static Future<bool> addCertificate(Certificate certificate) async {
-    List<Certificate> certificates = await Certificate.getCertificates();
-
-    if (certificates.contains(certificate)) return false;
-
-    certificates.add(certificate);
-
-    await Certificate.saveCertificates(certificates);
-
-    return true;
-  }
-
-  static Future<bool> removeCertificate(Certificate certificate) async {
-    List<Certificate> certificates = await Certificate.getCertificates();
-
-    if (!certificates.contains(certificate)) return false;
-
-    certificates.remove(certificate);
-
-    await Certificate.saveCertificates(certificates);
-
-    return true;
   }
 }

@@ -1,15 +1,11 @@
-# crypt_signature
-
-A new flutter plugin project.
-
-## Getting Started
-
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+!!! ДОБАВИТЬ В ПРОЕКТ ПРИ ПОДКЛЮЧЕНИИ МОДУЛЯ
+    packagingOptions {
+        exclude 'META-INF/Digest.CP'
+        exclude 'META-INF/Sign.CP'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        doNotStrip "*/arm64-v8a/*.so"
+        doNotStrip "*/armeabi/*.so"
+        doNotStrip "*/x86_64/*.so"
+        doNotStrip "*/x86/*.so"
+    }

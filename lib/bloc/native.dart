@@ -8,10 +8,11 @@ import 'package:path_provider/path_provider.dart';
 
 class Native {
   static const MethodChannel _channel = const MethodChannel('crypt_signature');
+  static String data;
 
   static Future<bool> initCSP() async {
     try {
-      bool result = await _channel.invokeMethod("initCSP");
+      dynamic result = await _channel.invokeMethod("initCSP");
       return result;
     } catch (exception) {
       print("Не удалось инициализировать провайдер: " + exception.toString());
@@ -22,35 +23,36 @@ class Native {
   static Future<ApiResponse<Certificate>> installCertificate(
       File file, String password) async {
     try {
-      String certificateInfo = await _channel.invokeMethod(
-          "installCert", {"pathToCert": file.path, "password": password});
+      String certificateInfo = await _channel.invokeMethod("installCertificate",
+          {"pathToCert": file.path, "password": password});
 
       Certificate certificate =
           Certificate.fromJson(json.decode(certificateInfo));
 
       Directory directory = await getApplicationDocumentsDirectory();
+      String filePath =
+          directory.path + "/certificates/" + certificate.uuid + ".pfx";
 
-      await file.copy(directory.path + certificate.uuid + ".pfx");
+      File(filePath);
+      await file.copy(filePath);
 
       file.delete();
 
       return ApiResponse.completed(certificate);
     } catch (exception) {
-      return ApiResponse.error(
-          "Возникла ошибка при добавлении сертификата. Проверьте правильность введенного пароля");
+      return ApiResponse.error(exception.toString());
     }
   }
 
-  static Future sign(
-      Certificate certificate, String password, String data) async {
+  static Future<ApiResponse<String>> sign(
+      Certificate certificate, String password) async {
     try {
-      final result = await _channel.invokeMethod("sign",
+      String result = await _channel.invokeMethod("sign",
           {"uuid": certificate.uuid, "password": password, "data": data});
 
-      print(result);
+      return ApiResponse.completed(result);
     } catch (exception) {
-      return ApiResponse.error(
-          "Возникла ошибка во время подписи. Проверьте правильность введенного пароля");
+      return ApiResponse.error(exception.toString());
     }
   }
 }

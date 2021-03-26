@@ -1,5 +1,6 @@
 package ru.krista.crypt.crypt_signature;
 
+import android.animation.Keyframe;
 import android.content.Context;
 import android.util.Base64;
 
@@ -9,10 +10,12 @@ import org.json.simple.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.Signature;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -49,8 +52,19 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
                 boolean resulty = initCSP();
 
                 if (resulty)
-                    result.success(null);
-                else result.error("ERROR", null, null);
+                    result.success(true);
+                else result.error("ERROR", "Ошибка при инициализации провайдера", null);
+                break;
+            }
+            case "installCertificate": {
+                String path = call.argument("pathToCert");
+                String password = call.argument("password");
+
+                MethodResponse<String> resulty = installCertificate(path, password);
+
+                if (resulty.code == MethodResponseCode.SUCCESS)
+                    result.success(resulty.content);
+                else result.error("ERROR", resulty.content, null);
                 break;
             }
             case "sign": {
@@ -89,22 +103,12 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
         }
     }
 
-    private MethodResponse<String> sign(String uuid, String password, String base64Data) {
+    private MethodResponse<String> installCertificate(String path, String password) {
+        log.info("Установка сертификата: path - " + path);
+
         try {
-            log.info("Данные " + base64Data);
-            byte[] data = Base64.decode(base64Data, Base64.DEFAULT);
-
-            MessageDigest md = MessageDigest.getInstance(
-                    JCP.GOST_DIGEST_2012_256_NAME, /// TODO: должен быть как у ключа
-                    JCSP.PROVIDER_NAME
-            );
-            md.update(data);
-            byte[] digest = md.digest();
-
-            log.info("Хэш " + Arrays.toString(digest));
-
             KeyStore keyStorePFX = KeyStore.getInstance(JCSP.PFX_STORE_NAME, JCSP.PROVIDER_NAME);
-            InputStream fileInputStream = new FileInputStream(context.getFilesDir().getPath() + "/" + uuid + ".pfx");
+            InputStream fileInputStream = new FileInputStream(path);
 
             keyStorePFX.load(fileInputStream, password.toCharArray());
 
@@ -118,18 +122,74 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
             }
 
             if (alias != null) {
+                log.info("Сертификат распакован");
+                X509Certificate certificate = (X509Certificate) keyStorePFX.getCertificate(alias);
+                String certificateInfo = saveCertificateInfo(certificate, alias);
+
+                return new MethodResponse<String>(certificateInfo, MethodResponseCode.SUCCESS);
+            } else {
+                log.info("Сертификат не распакован");
+                throw new Exception("Ошибка при импорте *.pfx сертификата");
+            }
+        } catch (Exception exception) {
+            log.info("Ошибка при чтении сертификата");
+            return new MethodResponse<String>("Ошибка: " + exception.toString(), MethodResponseCode.ERROR);
+        }
+    }
+
+    private String saveCertificateInfo(X509Certificate certificate, String alias) throws CertificateEncodingException {
+        JSONObject obj = new JSONObject();
+        obj.put("certificate", Base64.encodeToString(certificate.getEncoded(), Base64.DEFAULT));
+        obj.put("alias", alias);
+        obj.put("issuerDN", certificate.getSubjectDN().toString());
+        obj.put("notAfterDate", certificate.getNotAfter().toString());
+        obj.put("serialNumber", certificate.getSerialNumber().toString());
+
+        return obj.toJSONString();
+    }
+
+    private MethodResponse<String> sign(String uuid, String password, String base64Data) {
+        try {
+            KeyStore keyStorePFX = KeyStore.getInstance(JCSP.PFX_STORE_NAME, JCSP.PROVIDER_NAME);
+            InputStream fileInputStream = new FileInputStream(context.getFilesDir().getParent() + "/app_flutter/certificates/" + uuid + ".pfx");
+
+            keyStorePFX.load(fileInputStream, password.toCharArray());
+
+            String alias = null;
+            Enumeration<String> aliasesPFX = keyStorePFX.aliases();
+
+            while (aliasesPFX.hasMoreElements()) {
+                String aliasPFX = aliasesPFX.nextElement();
+                if (keyStorePFX.isKeyEntry(aliasPFX))
+                    alias = aliasPFX;
+            }
+
+            if (alias != null) {
+                X509Certificate certificate = (X509Certificate) keyStorePFX.getCertificate(alias);
+
+                log.info("Данные " + base64Data);
+                byte[] data = Base64.decode(base64Data, Base64.DEFAULT);
+
+                log.info(certificate.getPublicKey().getAlgorithm());
+
+                ru.krista.io.asn1.x509.PublicKeyInfo
+
+                MessageDigest md = MessageDigest.getInstance(
+                        certificate.getPublicKey().getAlgorithm(),
+                        JCSP.PROVIDER_NAME
+                );
+                md.update(data);
+                byte[] digest = md.digest();
+
+                log.info("Хэш " + Arrays.toString(digest));
+
                 log.info("Сертификат '" + alias + "' распакован");
                 PrivateKey privateKey = (PrivateKey) keyStorePFX.getKey(alias, password.toCharArray());
 
-                log.info(JCP.RAW_PREFIX + "with" + privateKey.getAlgorithm());
-
-                Signature signature = Signature.getInstance(JCP.GOST_DIGEST_2012_256_NAME + "with" + privateKey.getAlgorithm(), JCSP.PROVIDER_NAME);
+                Signature signature = Signature.getInstance(certificate.getPublicKey().getAlgorithm() + "with" + privateKey.getAlgorithm(), JCSP.PROVIDER_NAME);
                 signature.initSign(privateKey);
                 signature.update(digest);
                 byte[] sign = signature.sign();
-
-
-                X509Certificate certificate = (X509Certificate) keyStorePFX.getCertificate(alias);
 
                 JSONObject contentJson = new JSONObject();
                 contentJson.put("data", base64Data);

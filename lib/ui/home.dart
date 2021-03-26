@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'certificates.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key key}) : super(key: key);
+  final String title;
+  final String hint;
+  const Home(
+      {Key key, this.title = "Подпись", this.hint = "Выберите сертификат"})
+      : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -28,15 +32,15 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromRGBO(250, 250, 250, 1),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(40),
         child: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Color.fromRGBO(250, 250, 250, 1),
           centerTitle: true,
           elevation: 0,
           title: Text(
-            "Подпись",
+            widget.title,
             style: TextStyle(color: Colors.black),
           ),
           leading: GestureDetector(
@@ -69,7 +73,7 @@ class _HomeState extends State<Home> {
               );
 
             return snapshot.data
-                ? Certificates()
+                ? Certificates(hint: widget.hint)
                 : Center(child: Text("Не удалось инициализировать провайдер"));
           }),
     );

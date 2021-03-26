@@ -1,20 +1,36 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:crypt_signature/ui/home.dart';
 import 'package:crypt_signature/utils/fade_in_page_transition.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'bloc/native.dart';
 
 class CryptSignature {
-  static const MethodChannel _channel = const MethodChannel('crypt_signature');
+  static SharedPreferences sharedPreferences;
+  String data;
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
+  static Future<String> sign(BuildContext context, String base64Data,
+      {String title = "Подпись", String hint = "Выберите сертификат"}) async {
+    Native.data = base64Data;
 
-  static Future<String> sign(BuildContext context, String base64Data) async {
-    await Navigator.of(context)
-        .push(FadePageRoute(builder: (context) => Home()));
+    sharedPreferences = await SharedPreferences.getInstance();
+    //await sharedPreferences.clear();
+
+    Directory directory = await getApplicationDocumentsDirectory();
+    await Directory(directory.path + '/certificates').create();
+
+    Directory certiticatesDirectory =
+        Directory(directory.path + '/certificates');
+    print(certiticatesDirectory.listSync());
+
+    String result = await Navigator.of(context).push(
+        FadePageRoute(builder: (context) => Home(title: title, hint: hint)));
+
+    return result;
   }
 }
