@@ -2,7 +2,7 @@ name: crypt_signature
 description: crypt
 version: 1.0.0
 author: monakhov
-homepage:
+homepage: https://github.com/MaximMonakhov/crypt_signature
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
