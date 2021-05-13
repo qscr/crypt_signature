@@ -24,10 +24,6 @@ class CryptSignature {
     Directory directory = await getApplicationDocumentsDirectory();
     await Directory(directory.path + '/certificates').create();
 
-    Directory certiticatesDirectory =
-        Directory(directory.path + '/certificates');
-    print(certiticatesDirectory.listSync());
-
     String result = await Navigator.of(context).push(
         FadePageRoute(builder: (context) => Home(title: title, hint: hint)));
 
