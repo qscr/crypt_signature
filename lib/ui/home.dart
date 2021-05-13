@@ -1,5 +1,6 @@
 import 'package:api_event/api_event.dart';
 import 'package:crypt_signature/bloc/native.dart';
+import 'package:crypt_signature/crypt_signature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -33,6 +34,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,
         child: Scaffold(
@@ -49,7 +51,7 @@ class _HomeState extends State<Home> {
               ),
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () => Navigator.of(context).pop(),
+                onTap: () => Navigator.of(CryptSignature.rootContext).pop(),
                 child: Container(
                     alignment: Alignment.centerRight,
                     child: Text(

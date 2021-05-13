@@ -1,5 +1,6 @@
 import 'package:api_event/models/api_response.dart';
 import 'package:crypt_signature/bloc/native.dart';
+import 'package:crypt_signature/crypt_signature.dart';
 import 'package:crypt_signature/models/certificate.dart';
 import 'package:crypt_signature/ui/error.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,7 +25,7 @@ class CertificateWidget extends StatelessWidget {
       if (password != null && password.isNotEmpty) {
         ApiResponse response = await Native.sign(certificate, password);
         if (response.status == Status.COMPLETED) {
-          Navigator.of(context).pop(response.data);
+          Navigator.of(CryptSignature.rootContext).pop(response.data);
         } else
           showError(context,
               "Возникла ошибка во время подписи.\nПроверьте правильность введенного пароля",

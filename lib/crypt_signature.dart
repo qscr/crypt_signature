@@ -12,11 +12,13 @@ import 'bloc/native.dart';
 
 class CryptSignature {
   static SharedPreferences sharedPreferences;
+  static BuildContext rootContext;
   String data;
 
   static Future<String> sign(BuildContext context, String base64Data,
       {String title = "Подпись", String hint = "Выберите сертификат"}) async {
     Native.data = base64Data;
+    CryptSignature.rootContext = context;
 
     sharedPreferences = await SharedPreferences.getInstance();
     //await sharedPreferences.clear();
