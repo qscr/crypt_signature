@@ -279,7 +279,7 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
 
                 JSONObject contentJson = new JSONObject();
                 contentJson.put("data", base64Data);
-                contentJson.put("serialNumber", certificate.getSerialNumber());
+                contentJson.put("serialNumber", certificate.getSerialNumber().toString());
                 contentJson.put("certificate", Base64.encodeToString(certificate.getEncoded(), Base64.NO_WRAP));
                 contentJson.put("sign", Base64.encodeToString(sign, Base64.NO_WRAP));
 
