@@ -11,7 +11,7 @@
 
 ### 2. ```AndroidManifest.xml``` 
 ```
-<applicationandroid:extractNativeLibs="true"></application>
+<application android:extractNativeLibs="true"></application>
 ```
 
 ### 3. ```gradle.propeties```
