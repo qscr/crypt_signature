@@ -8,6 +8,9 @@
 #import "crypt_signature-Swift.h"
 #endif
 
+extern bool USE_CACHE_DIR;
+bool USE_CACHE_DIR = false;
+
 @implementation CryptSignaturePlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   [SwiftCryptSignaturePlugin registerWithRegistrar:registrar];

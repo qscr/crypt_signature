@@ -1,0 +1,4 @@
+#!/bin/bash
+PARAM="\"/Users/kristofer/Desktop/Project/crypt_signature/example/build/ios/Release-iphoneos/Runner.app/Runner\" program_control_sum"
+PROGRAM_CHECKSUM=`dirname $0`/program_checksum.sh 
+eval $PROGRAM_CHECKSUM $PARAM 
