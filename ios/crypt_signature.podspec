@@ -27,6 +27,6 @@ A new flutter plugin project.
 
   s.xcconfig = {
     'ENABLE_BITCODE' => 'NO',
-    'OTHER_LDFLAGS' => '-l"librdrpcsc_empty.o" -lc++ -lstdc++ -lz',
+    'OTHER_LDFLAGS' => '-lc++ -lstdc++ -lz',
   }
 end
