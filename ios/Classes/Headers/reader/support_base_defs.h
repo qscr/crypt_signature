@@ -1,7 +1,7 @@
 #ifndef SUPPORT_BASE_DEFS_H_INCLUDED
 #define SUPPORT_BASE_DEFS_H_INCLUDED
-#include<common.h>
-#include<tchar.h>
+#include"../common.h"
+#include"tchar.h"
 
 /* --------------- INCLUDE --------------- */
 #if defined(CSP_LITE)       	
@@ -17,8 +17,8 @@
 #   pragma warning( pop )
 #elif defined UNIX
 #   include <wchar.h>
-#include<CSP_WinDef.h>
-#include<CSP_WinError.h>
+#include"../CSP_WinDef.h"
+#include"../CSP_WinError.h"
 #   include <stdlib.h>
 #   include <stdarg.h>
 # ifdef HAVE_STDINT_H
@@ -32,12 +32,12 @@
 #   include <sys/time.h>
 #   include <pthread.h>
 #   include <nl_types.h>
-#include<ubi_mutex.h>
+#include"ubi_mutex.h"
 #else
 #   error !UNIX && !_WIN32
 #endif //CSP_LITE
 
-#include<std_decl.h>
+#include"std_decl.h"
 
 #ifdef UNIX
 # define SUP_INLINE inline

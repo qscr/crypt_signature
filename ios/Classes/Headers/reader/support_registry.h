@@ -1,7 +1,7 @@
 #ifndef SUPPORT_REGISTRY_H_INCLUDED
 #define SUPPORT_REGISTRY_H_INCLUDED
 
-#include<support_base_defs.h>
+#include"support_base_defs.h"
 
 /*+ ���� � ���������� registry. +*/
 #define SUPPORT_REG_LOCAL _TEXT( "\\LOCAL" )

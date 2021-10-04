@@ -23,7 +23,7 @@
 #ifndef _CSP_WINERROR_
 #define _CSP_WINERROR_
 
-#include<CSP_WinDef.h>
+#include"CSP_WinDef.h"
 
 /**/
 /*  Values are 32 bit values layed out as follows:*/

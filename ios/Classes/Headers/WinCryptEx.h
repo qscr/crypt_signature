@@ -30,9 +30,9 @@
 #ifndef _WINCRYPTEX_USE_EXTERNAL_TYPES
 
 #if defined UNIX || defined CSP_LITE
-#include<CSP_WinCrypt.h>
+#include"CSP_WinCrypt.h"
 #else // UNIX
-#include <wincrypt.h>
+#include "wincrypt.h"
 #endif // UNIX
 
 #endif // _WINCRYPTEX_USE_EXTERNAL_TYPES

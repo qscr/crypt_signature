@@ -15,8 +15,8 @@
 #if !defined( _READER_SUPPORT_SUPPORT_H )
 #define _READER_SUPPORT_SUPPORT_H
 
-#include<support_base_defs.h>
-#include<support_registry.h>
+#include"support_base_defs.h"
+#include"support_registry.h"
 
 #if !defined( _SUPPORT_CALLBACK_CONV )
 #   if defined( UNIX )
@@ -744,7 +744,7 @@ typedef struct timeval support_timeval;
 extern "C" {
 #endif /* defined( __cplusplus ) */
 
-#include<altreg.h>
+#include"altreg.h"
 DWORD usenewreg(void); /* ������������ �� ����� ��������. 0 -- �������, ��-0 -- ������ */
 DWORD rlsnewreg(void); /* ��������� ������ � �����, ������������� �� ������. ������ ������� */
 DWORD isnewreg(void);   /* 0 -- ������, ��-0 -- ����� */
@@ -1836,7 +1836,7 @@ void support_init_locale(void);
 #endif
 
 #ifndef CSP_LITE
-#include<support_util.h>
+#include"support_util.h"
 #endif //CSP_LITE
 
 #endif /* !_READER_SUPPORT_SUPPORT_H */

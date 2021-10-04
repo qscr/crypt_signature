@@ -21,10 +21,10 @@
 #  define HAVE_STDINT_H 1
 #endif
 
-#include<CSP_WinCrypt.h>
-#include<WinCryptEx.h>
-#include<CSP_Sspi.h>
-#include<support.h>
-#include<CSP_SChannel.h>
+#include"CSP_WinCrypt.h"
+#include"WinCryptEx.h"
+#include"CSP_Sspi.h"
+#include"reader/support.h"
+#include"CSP_SChannel.h"
 
 #endif //__CPROCSP_IOS_H__

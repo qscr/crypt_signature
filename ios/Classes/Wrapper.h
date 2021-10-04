@@ -6,6 +6,7 @@
 //  Copyright © 2020 Кристофер Кристовский. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import "stdlib.h"
 #import "stdio.h"
 

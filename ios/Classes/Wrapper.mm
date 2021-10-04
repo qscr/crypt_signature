@@ -6,10 +6,9 @@
 //  Copyright © 2020 Кристофер Кристовский. All rights reserved.
 //
 
-#import "Wrapper.hpp"
-#include "Headers/CPCrypt.h"
-#include <DisableIntegrity.h>
-#include <curl/curl.h>
+#import "Wrapper.h"
+#include "Headers/CPROCSP.h"
+#include "Headers/DisableIntegrity.h"
 
 #define MY_ENCODING_TYPE  (PKCS_7_ASN_ENCODING | X509_ASN_ENCODING)
 

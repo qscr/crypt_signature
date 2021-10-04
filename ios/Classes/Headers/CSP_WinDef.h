@@ -402,7 +402,7 @@ typedef struct _LUID {
 #define FillMemory(Destination,Length,Fill) memset((Destination),(Fill),(Length))
 /*����� ����������� �� WinNT.h*/
 
-#include<CSP_WinBase.h>
+#include"CSP_WinBase.h"
 
 /*������ ����������� �� WinNls.h*/
 
