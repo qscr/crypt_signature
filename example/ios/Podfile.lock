@@ -81,7 +81,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   connectivity_plus: 5f0eb61093bec56935f21a1699dd2758bc895587
-  crypt_signature: c7d72336d1ee5b83ec70eb3d63056d5616e319fe
+  crypt_signature: c65d62092ebd9132e3b67cfbd86f156cdd77ffe8
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
