@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -114,7 +114,6 @@
 		5223AB354F3223C2EA68B1AC22A9558D /* SDWebImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = E7457A0DBA2EC2BC0015C7B2A8DD9C7A /* SDWebImageDownloader.m */; };
 		52C4F124672FD3214387E8FA7F20B09F /* SDFileAttributeHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1685437F80A775BF0CC2FB5CD78AA20C /* SDFileAttributeHelper.m */; };
 		53D5D85E53EB43C448444D375E863F2B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE3FE1408232B202A4F758549AB2859E /* UIKit.framework */; };
-		5434E4356ACA258077DA2956FFE532C9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04B25EC9AD835929C7931727405797AC /* Foundation.framework */; };
 		54709703BF4B4016DF8F250B4653BABC /* DKPhotoImagePreviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D528D123EB908A09211C34BC657F8075 /* DKPhotoImagePreviewVC.swift */; };
 		563AA30A6F828CCBD83B7B3A7ED4D97C /* pt_BR.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 6C8F51ABF9252CE3C35A8F8B593E31DB /* pt_BR.lproj */; };
 		5684BE26B0AD8D58AC9D9CB9AB8A5620 /* DKImagePickerController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7247E064ECCE473BC39CE9C6B1E7C0B3 /* DKImagePickerController.bundle */; };
@@ -125,6 +124,8 @@
 		5936A5F8BC574CD74119833FDEB2326A /* DKPhotoGalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EFCC8D2A2DE4DA1B870E51E863B0E1 /* DKPhotoGalleryItem.swift */; };
 		59D2D1C11EF9E2EF55714E0A28CC75B0 /* SDImageGIFCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 84BCDED0427F42446FDC660510337E56 /* SDImageGIFCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B77596F28D773529284782B674647A2 /* UIImage+ExtendedCacheData.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C600BA969B278B958C5333702AF1052 /* UIImage+ExtendedCacheData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5C88C722270F1B11009FDE90 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C88C721270F1B11009FDE90 /* Foundation.framework */; };
+		5C88C723270F1F7A009FDE90 /* libCPROCSP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 72FA4A54FE008B3F86CBE340FC7BDFD8 /* libCPROCSP.a */; };
 		5D2DA2F8CDA1A77A2776D17FBB1A423F /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5626EEE2DA200B1FEF62AB7A89E571 /* UIImageView+WebCache.m */; };
 		5D660C4D2793AC51C42CB225E3F712F4 /* DKPhotoProgressIndicatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB70DD7FE56A1F6900A4AE7E22302B5 /* DKPhotoProgressIndicatorProtocol.swift */; };
 		5DB2CC9189F3490003836113133D8B51 /* zh-Hans.lproj in Resources */ = {isa = PBXBuildFile; fileRef = DD124B38D3EBEE7A71CBD48A67D8ADC8 /* zh-Hans.lproj */; };
@@ -613,6 +614,7 @@
 		5B3A1DC0B9D13BEFBC03F85737813141 /* DKPhotoImageUtility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DKPhotoImageUtility.swift; path = DKPhotoGallery/Preview/ImagePreview/DKPhotoImageUtility.swift; sourceTree = "<group>"; };
 		5B803E37B4DB9E609E3D0C7C20FC4702 /* SDImageAWebPCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageAWebPCoder.m; path = SDWebImage/Core/SDImageAWebPCoder.m; sourceTree = "<group>"; };
 		5C876287DFDF68F0DC394C70D413CC56 /* FilePickerPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FilePickerPlugin.h; path = "../../../../../../../../../flutter/.pub-cache/hosted/pub.dartlang.org/file_picker-3.0.4/ios/Classes/FilePickerPlugin.h"; sourceTree = "<group>"; };
+		5C88C721270F1B11009FDE90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5C99E6938B5B12B92CD02A81334F1BE7 /* DKPhotoGalleryTransitionDismiss.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DKPhotoGalleryTransitionDismiss.swift; path = DKPhotoGallery/Transition/DKPhotoGalleryTransitionDismiss.swift; sourceTree = "<group>"; };
 		5CB1057F076411AF91E3A949DF7DD110 /* SDAssociatedObject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDAssociatedObject.m; path = SDWebImage/Private/SDAssociatedObject.m; sourceTree = "<group>"; };
 		5CB4166F5CE565D574A1290618EA7AE5 /* SwiftyGif.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SwiftyGif.h; path = SwiftyGif/SwiftyGif.h; sourceTree = "<group>"; };
@@ -959,7 +961,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5434E4356ACA258077DA2956FFE532C9 /* Foundation.framework in Frameworks */,
+				5C88C723270F1F7A009FDE90 /* libCPROCSP.a in Frameworks */,
+				5C88C722270F1B11009FDE90 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1689,6 +1692,7 @@
 		784CDE2C69839A3EDA49DABDE9CEE140 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5C88C721270F1B11009FDE90 /* Foundation.framework */,
 				FCC4B8E7124B3DAC2AC2523E697DC974 /* DKImagePickerController.framework */,
 				04DF37F2BD5DA12737132A797ED4B5FC /* DKPhotoGallery.framework */,
 				F9E96CFBBE601B253EC245BD57458B7C /* Reachability.framework */,
@@ -2684,8 +2688,8 @@
 			buildConfigurationList = 4441C8F1B54384F590FD240C54BE0B01 /* Build configuration list for PBXNativeTarget "crypt_signature" */;
 			buildPhases = (
 				BDEB55C0D2CA52363083AA80D8463DF2 /* Headers */,
+				5C88C720270F0F86009FDE90 /* Run Script */,
 				238EAAF326D347F1ECE7D87CE5944910 /* Sources */,
-				5C88C71F270F0EA5009FDE90 /* ShellScript */,
 				FBA44FA9D297F78B4B6C1656CAA159AD /* Frameworks */,
 				FFA5CA2C210BA135974438FF2B20B558 /* Resources */,
 			);
@@ -2918,22 +2922,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		5C88C71F270F0EA5009FDE90 /* ShellScript */ = {
+		5C88C720270F0F86009FDE90 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			alwaysOutOfDate = 1;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "require 'xcodeproj'\npath_to_project = \"${SOURCE_ROOT}/${PROJECT_NAME}.xcodeproj\"\nproject = Xcodeproj::Project.open(path_to_project)\n";
+			shellScript = "echo \"warning: RUN SCRIPT in ACTION\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3511,6 +3517,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -3954,6 +3961,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -5189,6 +5197,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
