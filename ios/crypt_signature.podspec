@@ -26,11 +26,6 @@ A new flutter plugin project.
   s.vendored_libraries = 'libCPROCSP.a'
   
   # s.prepare_command = 'ruby script.rb'
-  # s.script_phase = {
-  #   :name => 'Script',
-  #   :script => 'echo kek',
-  #   :execution_position => :before_compile
-  # }
 
   s.xcconfig = {
     'ENABLE_BITCODE' => 'NO',

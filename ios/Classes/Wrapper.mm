@@ -24,7 +24,14 @@ bool initCSP()
     HCRYPTPROV phProv = 0;
     
     if (!CryptAcquireContextA(&phProv, NULL, NULL, PROV_GOST_2012_256, CRYPT_SILENT | CRYPT_VERIFYCONTEXT)) {
+         
         printf("Не удалось инициализировать Context\n");
+        wchar_t buf[256];
+        CSP_FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                       NULL, CSP_GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                       buf, (sizeof(buf) / sizeof(wchar_t)), NULL);
+        printf("%ls\n", buf);
+        return false;
         return false;
     }
     
