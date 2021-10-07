@@ -25,7 +25,7 @@ A new flutter plugin project.
   s.ios.library = 'z'
   s.vendored_libraries = 'libCPROCSP.a'
   
-  s.prepare_command = 'ruby script.rb'
+  # s.prepare_command = 'ruby script.rb'
   # s.script_phase = {
   #   :name => 'Script',
   #   :script => 'echo kek',
