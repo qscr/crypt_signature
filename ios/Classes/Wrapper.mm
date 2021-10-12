@@ -24,14 +24,8 @@ bool initCSP()
     HCRYPTPROV phProv = 0;
     
     if (!CryptAcquireContextA(&phProv, NULL, NULL, PROV_GOST_2012_256, CRYPT_SILENT | CRYPT_VERIFYCONTEXT)) {
-         
-        printf("Не удалось инициализировать Context\n");
-        wchar_t buf[256];
-        CSP_FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                       NULL, CSP_GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                       buf, (sizeof(buf) / sizeof(wchar_t)), NULL);
-        printf("%ls\n", buf);
-        return false;
+        printf("Не удалось инициализировать context\n");
+        printf("%d\n", CSP_GetLastError());
         return false;
     }
     
@@ -39,15 +33,14 @@ bool initCSP()
     
     /// Получение списка контейнеров
     DWORD pdwDataLen = 0;
+    DWORD flag = 1;
     
-    if (!CryptGetProvParam(phProv, PP_ENUMCONTAINERS, NULL, &pdwDataLen, 1)) {
+    if (!CryptGetProvParam(phProv, PP_ENUMCONTAINERS, NULL, &pdwDataLen, flag)) {
         printf("Не удалось получить список контейнеров закрытого ключа\n");
         return false;
     }
     
     BYTE* data = (BYTE*)malloc(pdwDataLen);
-    
-    DWORD flag = 1;
     
     while (CryptGetProvParam(phProv, PP_ENUMCONTAINERS, data, &pdwDataLen, flag)) {
         printf("\n Container = %s\n", data);
@@ -64,7 +57,7 @@ bool initCSP()
 bool addCert() {
     CRYPT_DATA_BLOB certBlob;
     
-    NSString* pathToCertFileString = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"pfx"];
+    NSString* pathToCertFileString = [[NSBundle mainBundle] pathForResource:@"test256" ofType:@"pfx"];
     const char* pathtoCertFile = [pathToCertFileString UTF8String];
     FILE *file = fopen(pathtoCertFile, "rb");
     fseek(file, 0, SEEK_END);

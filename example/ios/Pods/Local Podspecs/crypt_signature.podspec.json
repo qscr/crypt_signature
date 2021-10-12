@@ -32,6 +32,7 @@
     "libraries": "z"
   },
   "vendored_libraries": "libCPROCSP.a",
+  "resources": "Resources/*",
   "xcconfig": {
     "ENABLE_BITCODE": "NO",
     "OTHER_LDFLAGS": "-l\"librdrpcsc_empty.o\" -lc++ -lstdc++ -lz"

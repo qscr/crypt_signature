@@ -24,6 +24,7 @@ A new flutter plugin project.
 
   s.ios.library = 'z'
   s.vendored_libraries = 'libCPROCSP.a'
+  s.resources = 'Resources/*'
   
   # s.prepare_command = 'ruby script.rb'
 
