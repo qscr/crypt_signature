@@ -16,8 +16,14 @@ extern bool USE_CACHE_DIR;
 bool USE_CACHE_DIR = false;
 
 /// Инициализация провайдера и получение списка контейнеров
-bool initCSP()
+int initCSP()
 {
+    int INIT_CSP_OK = 0;
+    //int INIT_CSP_LICENSE_ERROR = 1;
+    int INIT_CSP_ERROR = -1;
+    
+    printf("\nИнициализация провайдера и получение списка контейнеров\n\n");
+    
     DisableIntegrityCheck();
     
     /// Инициализация контекста
@@ -26,39 +32,53 @@ bool initCSP()
     if (!CryptAcquireContextA(&phProv, NULL, NULL, PROV_GOST_2012_256, CRYPT_SILENT | CRYPT_VERIFYCONTEXT)) {
         printf("Не удалось инициализировать context\n");
         printf("%d\n", CSP_GetLastError());
-        return false;
+        return INIT_CSP_ERROR;
     }
     
-    printf("\nContext = %d\n", (LONG)phProv);
+    printf("\nКонтекст инициализирован\n");
+    printf("Context HCRYPTPROV = %d\n", (LONG)phProv);
     
     /// Получение списка контейнеров
     DWORD pdwDataLen = 0;
     DWORD flag = 1;
+    DWORD error_no_more_items = 259;
     
+    printf("\nПолучение списка контейнеров\n\n");
     if (!CryptGetProvParam(phProv, PP_ENUMCONTAINERS, NULL, &pdwDataLen, flag)) {
-        printf("Не удалось получить список контейнеров закрытого ключа\n");
-        return false;
+        DWORD error = CSP_GetLastError();
+        if (error == error_no_more_items) {
+            printf("Список контейнеров пуст\n");
+            CryptReleaseContext(phProv, 0);
+            return INIT_CSP_ERROR;
+        }
+            
+        printf("Не удалось получить список контейнеров\n");
+        printf("%d\n", error);
+        CryptReleaseContext(phProv, 0);
+        return INIT_CSP_ERROR;
     }
     
     BYTE* data = (BYTE*)malloc(pdwDataLen);
     
-    while (CryptGetProvParam(phProv, PP_ENUMCONTAINERS, data, &pdwDataLen, flag)) {
-        printf("\n Container = %s\n", data);
-        flag = 2;
-    };
+    int i = 1;
     
-    CryptReleaseContext(phProv, 0);
+    while (CryptGetProvParam(phProv, PP_ENUMCONTAINERS, data, &pdwDataLen, flag)) {
+        printf("\nКонтейнер #%d\n", i);
+        printf("%s\n", data);
+        flag = 2;
+        i++;
+    };
     
     free(data);
     
-    return true;
+    return INIT_CSP_OK;
 }
 
-bool addCert() {
+bool addCert(char* pathtoCertFile, char* password) {
+    printf("\nУстановка контейнера\n\n");
+    
     CRYPT_DATA_BLOB certBlob;
     
-    NSString* pathToCertFileString = [[NSBundle mainBundle] pathForResource:@"test256" ofType:@"pfx"];
-    const char* pathtoCertFile = [pathToCertFileString UTF8String];
     FILE *file = fopen(pathtoCertFile, "rb");
     fseek(file, 0, SEEK_END);
     certBlob.cbData = (DWORD)ftell(file);
@@ -68,17 +88,18 @@ bool addCert() {
     fclose(file);
     
     /// Добавление контейнера
-    HCERTSTORE certStore = PFXImportCertStore(&certBlob, L"123", CRYPT_SILENT);
+    HCERTSTORE certStore = PFXImportCertStore(&certBlob, (LPCWSTR)password, CRYPT_SILENT | CRYPT_EXPORTABLE);
     
     if (!certStore) {
         printf("Не удалось добавить контейнер закрытого ключа");
         return false;
     } else {
-        printf("Контейнер успешно добавлен\n");
+        printf("\nКонтейнер успешно добавлен\n\n");
     }
     
     /// Вывод информации о сертификате
     PCCERT_CONTEXT pPrevCertContext = NULL;
+    printf("Информация о сертификатах в конейнере\n");
     
     do {
         pPrevCertContext = CertEnumCertificatesInStore(certStore, pPrevCertContext);
@@ -88,7 +109,7 @@ bool addCert() {
             
             CertNameToStrA(X509_ASN_ENCODING, &pPrevCertContext->pCertInfo->Subject, CERT_SIMPLE_NAME_STR, psz, csz);
             
-            printf("cert - %s\n", psz);
+            printf("Certificate: %s\n", psz);
             
             free(psz);
         }
@@ -113,6 +134,8 @@ bool addCert() {
     //--------------------------------------------------------------------
     // Установка параметров в соответствии с паролем.
 
+    printf("\nУстановка пароля на ключевой контейнер\n\n");
+    
     CRYPT_PIN_PARAM param;
     param.type = CRYPT_PIN_PASSWD;
     param.dest.passwd = (char*)"123";
@@ -140,6 +163,7 @@ bool removeCert() {
 }
 
 void sign() {
+    printf("\nПодписание\n");
     HCRYPTPROV hProv = 0;            // Дескриптор CSP
     HCRYPTKEY hKey = 0;              // Дескриптор ключа
     HCRYPTHASH hHash = 0;
@@ -154,7 +178,7 @@ void sign() {
     DWORD cbHash;
     DWORD dwSigLen;
     
-    // Получение дескриптора провайдера.
+    printf("Получение дескриптора провайдера\n");
     if(!CryptAcquireContext(
                             &hProv,
                             _TEXT("\\\\.\\HDIMAGE\\test"),
@@ -166,9 +190,7 @@ void sign() {
         return;
     }
     
-    //--------------------------------------------------------------------
-    // Установка параметров в соответствии с паролем.
-    
+    printf("Установка параметров в соответствии с паролем\n");
     if(!CryptSetProvParam(
                           hProv,
                           PP_KEYEXCHANGE_PIN,
@@ -184,6 +206,7 @@ void sign() {
         return;
     }
     
+    printf("Получение ключа обмена\n");
     if(!CryptGetUserKey(
        hProv,
        AT_KEYEXCHANGE,
@@ -198,8 +221,7 @@ void sign() {
         return;
     }
     
-    //--------------------------------------------------------------------
-    // Создание объекта функции хэширования.
+    printf("Создание объекта функции хэширования\n");
     if(!CryptCreateHash(
                         hProv,
                         CALG_GR3411_2012_256,
@@ -317,6 +339,7 @@ void sign() {
     }
     
     // Подпись объекта функции хэширования.
+    printf("Подпись объекта функции хэширования\n");
     if(!CryptSignHash(
                      hHash,
                      AT_KEYEXCHANGE,
@@ -338,6 +361,8 @@ void sign() {
     CryptBinaryToStringA(pbSignature, dwSigLen, CRYPT_STRING_BASE64, NULL, &base64Len);
     LPSTR base64String = (char*)malloc(base64Len);
     CryptBinaryToStringA(pbSignature, dwSigLen, CRYPT_STRING_BASE64, base64String, &base64Len);
+    
+    printf("Сигнатура: ");
     printf("%s", base64String);
     
     if(pbHash)
@@ -350,9 +375,6 @@ void sign() {
     // Уничтожение объекта функции хэширования.
     if(hHash)
         CryptDestroyHash(hHash);
-    
-    printf("The hash object has been destroyed.\n");
-    printf("The signature is created.\n\n");
     
     // Уничтожение дескриптора ключа пользователя.
     
@@ -367,3 +389,19 @@ void sign() {
     printf("The program ran to completion without error. \n");
     return;
 }
+
+
+enum MethodResponseCode {
+    SUCCESS, ERROR
+};
+
+
+class MethodResponse {
+public:
+    MethodResponseCode code;
+    char* content;
+    MethodResponse(char* content, MethodResponseCode code) {
+        this->code = code;
+        this->content = content;
+    };
+};

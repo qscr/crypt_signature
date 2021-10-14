@@ -13,8 +13,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-bool initCSP();
-bool addCert();
+int initCSP();
+bool addCert(char* pathtoCertFile, char* password);
 bool removeCert();
 void sign();
 
