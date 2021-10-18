@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:api_event/api_event.dart';
 import 'package:crypt_signature/bloc/native.dart';
 import 'package:crypt_signature/crypt_signature.dart';
 import 'package:crypt_signature/ui/error.dart';
+import 'package:crypt_signature/utils/X509Certificate/x509_base.dart' as x509_base;
+import 'package:crypt_signature/utils/X509Certificate/certificate.dart' as certificate;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -29,9 +33,19 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    checkLicense();
+    if (Platform.isIOS) 
+      _initCSP(null);
+    else checkLicense();
+
+    test();
 
     super.initState();
+  }
+
+  void test() {
+    String pem = "-----BEGIN CERTIFICATE-----\nMIIDZzCCAxagAwIBAgITEgBWPjlA4pGDdr77jQABAFY+OTAIBgYqhQMCAgMwfzEjMCEGCSqGSIb3DQEJARYUc3VwcG9ydEBjcnlwdG9wcm8ucnUxCzAJBgNVBAYTAlJVMQ8wDQYDVQQHEwZNb3Njb3cxFzAVBgNVBAoTDkNSWVBUTy1QUk8gTExDMSEwHwYDVQQDExhDUllQVE8tUFJPIFRlc3QgQ2VudGVyIDIwHhcNMjEwNzEzMTQ1MDQyWhcNMjExMDEzMTUwMDQyWjBtMRMwEQYJKoZIhvcNAQkBFgR0ZXN0MQ0wCwYDVQQDDAR0ZXN0MQ0wCwYDVQQLDAR0ZXN0MQ0wCwYDVQQKDAR0ZXN0MQ0wCwYDVQQHDAR0ZXN0MQ0wCwYDVQQIDAR0ZXN0MQswCQYDVQQGEwJSVTBmMB8GCCqFAwcBAQEBMBMGByqFAwICJAAGCCqFAwcBAQICA0MABECW1O0ZJyUQ3iSyqKJWoJ0THBVFlFevc9sidxwqT0NnHkhjWAanaj5d/Lls0HkiUF/4OUr0F9zV5ftdS13/YsEko4IBdjCCAXIwDgYDVR0PAQH/BAQDAgTwMBMGA1UdJQQMMAoGCCsGAQUFBwMCMB0GA1UdDgQWBBRdgzpK69VKGpjJO4RWjjaUxfCtcDAfBgNVHSMEGDAWgBROgz4Uae/sXXqVK18R/jcyFklVKzBcBgNVHR8EVTBTMFGgT6BNhktodHRwOi8vdGVzdGNhLmNyeXB0b3Byby5ydS9DZXJ0RW5yb2xsL0NSWVBUTy1QUk8lMjBUZXN0JTIwQ2VudGVyJTIwMigxKS5jcmwwgawGCCsGAQUFBwEBBIGfMIGcMGQGCCsGAQUFBzAChlhodHRwOi8vdGVzdGNhLmNyeXB0b3Byby5ydS9DZXJ0RW5yb2xsL3Rlc3QtY2EtMjAxNF9DUllQVE8tUFJPJTIwVGVzdCUyMENlbnRlciUyMDIoMSkuY3J0MDQGCCsGAQUFBzABhihodHRwOi8vdGVzdGNhLmNyeXB0b3Byby5ydS9vY3NwL29jc3Auc3JmMAgGBiqFAwICAwNBAHVl25vD4ZYZmqgnaVc2wzoIOMA6z4KbuJZ387dm17l2HkjFf5OJ9hKHKsYhmcTqu58FZZc4EDu8L7iGtU6LUD4=\n-----END CERTIFICATE-----\n";
+    certificate.X509Certificate cert = x509_base.parsePem(pem).first;
+    print(cert);
   }
 
   void checkLicense() {

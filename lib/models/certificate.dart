@@ -49,6 +49,11 @@ class Certificate {
       parameterMap: json['parameterMap'] as String,
       certificateDescription: json['certificateDescription'] as String);
 
+    static Certificate fromBase64(String rawCertificate) {
+      //X509Certificate certificate = parsePem(rawCertificate).first;
+      
+    }
+
   @override
   // ignore: hash_and_equals
   bool operator ==(other) {
