@@ -48,7 +48,7 @@ class ObjectIdentifier {
       bytes.addAll(w.skip(1).toList().reversed.map((v) => v + 128));
       bytes.add(w.first);
     }
-    return ASN1ObjectIdentifier(bytes as List<int>);
+    return ASN1ObjectIdentifier(bytes);
   }
 
   @override

@@ -18,12 +18,7 @@ class CertificateWidget extends StatelessWidget {
       {Key key, this.onCertificateSelected})
       : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    List<String> dateSplit = certificate.notAfterDate.split(" ");
-    String date = dateSplit[2] + " " + dateSplit[1] + " " + dateSplit[5];
-
-    signData(Certificate certificate) async {
+      signData(Certificate certificate, BuildContext context) async {
       String password = await showInputDialog(
           context,
           "Введите пароль для\n доступа к контейнеру приватного ключа",
@@ -46,7 +41,7 @@ class CertificateWidget extends StatelessWidget {
       }
     }
 
-    sign(Certificate certificate) async {
+    sign(Certificate certificate, BuildContext context) async {
       UI.lockScreen();
       Native.data = await onCertificateSelected(json.encode(certificate));
       UI.unlockScreen();
@@ -77,12 +72,14 @@ class CertificateWidget extends StatelessWidget {
       }
     }
 
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         if (onCertificateSelected == null)
-          signData(certificate);
+          signData(certificate, context);
         else
-          sign(certificate);
+          sign(certificate, context);
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5.0),
@@ -133,12 +130,12 @@ class CertificateWidget extends StatelessWidget {
               "Алиас: " + certificate.alias,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            Text("Дата окончания: " + date,
+            Text("Дата окончания: " + certificate.notAfterDate,
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
             Text("Алгоритм публичного ключа: " + certificate.algorithm,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             Text(
-              "Информация: " + certificate.issuerDN,
+              "Информация: " + certificate.subjectDN,
               style: TextStyle(fontSize: 12),
             ),
           ],

@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String data = "ZGF0YQ==";
+  String data = "0J/Rg9GC0LjQvSDQstC+0YA=";
 
   Future<String> onCertificateSelected(String rawCertificate) async {
     await Future.delayed(Duration(seconds: 5));

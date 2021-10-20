@@ -99,7 +99,7 @@ public class CryptSignaturePlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             }
             case "sign": {
-                String uuid = call.argument("uuid");
+                String uuid = call.argument("id");
                 String password = call.argument("password");
                 String data = call.argument("data");
 

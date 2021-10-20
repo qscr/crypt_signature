@@ -15,8 +15,7 @@ extern "C" {
 #endif
 int initCSP();
 NSString* addCert(NSString* pathtoCertFile, NSString* password);
-bool removeCert();
-void sign();
+NSString* sign(NSString* alias, NSString* password, NSString* data);
 
 #ifdef __cplusplus
 }

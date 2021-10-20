@@ -58,8 +58,8 @@ class Extension {
   @override
   String toString([String prefix = '']) {
     var buffer = StringBuffer();
-    buffer.writeln("${prefix}$extnId: ${isCritical ? "critical" : ""}");
-    buffer.writeln('${prefix}\t$extnValue');
+    buffer.writeln("$prefix$extnId: ${isCritical ? "critical" : ""}");
+    buffer.writeln('$prefix\t$extnValue');
     return buffer.toString();
   }
 }
@@ -90,10 +90,10 @@ abstract class ExtensionValue {
         case 17: // subject alternative name extension
         case 18: // issuer alternative name extension
           return GeneralNames.fromAsn1(obj as ASN1Sequence);
-        case 9: // TODO: subject directory attributes extension
-        case 30: // TODO: name constraints extension
-        case 33: // TODO: policy mappings extension
-        case 36: // TODO: policy constraints extension
+        case 9: 
+        case 30: 
+        case 33: 
+        case 36: 
           break;
         case 19:
           return BasicConstraints.fromAsn1(obj as ASN1Sequence);
@@ -277,7 +277,6 @@ class KeyUsage extends ExtensionValue {
   @override
   String toString() => [
         digitalSignature ? 'Digital Signature' : null
-        // TODO others
       ].where((v) => v != null).join(',');
 }
 
@@ -330,7 +329,6 @@ class BasicConstraints extends ExtensionValue {
   @override
   String toString() => [
         "CA:${"$cA".toUpperCase()}"
-        // TODO: path length constraint
       ].join(',');
 }
 
@@ -389,7 +387,7 @@ class PolicyInformation {
     var buffer = StringBuffer();
     buffer.writeln('${prefix}Policy: $policyIdentifier');
     buffer.writeln(
-        policyQualifiers.map((q) => q.toString('${prefix}\t')).join('\n'));
+        policyQualifiers.map((q) => q.toString('$prefix\t')).join('\n'));
     return buffer.toString();
   }
 }
@@ -435,7 +433,7 @@ class PolicyQualifierInfo {
         return '${prefix}CPS: $cpsUri';
       case 2: // unotice
         return '${prefix}User Notice:\n'
-            '${userNotice?.toString('${prefix}\t')}';
+            '${userNotice?.toString('$prefix\t')}';
     }
     throw UnsupportedError(
         'Policy qualifier id $policyQualifierId not supported');
@@ -651,7 +649,7 @@ class GeneralName {
         case 8:
           contents = ASN1ObjectIdentifier.fromBytes(obj.valueBytes());
           break;
-        case 0: // TODO: unimplemented.
+        case 0: 
         case 3:
         case 4:
         case 5:
@@ -673,7 +671,7 @@ class GeneralName {
     } else {
       contentsString = contents.toString();
     }
-    return '${_choiceName[choice]}:${contentsString}';
+    return '${_choiceName[choice]}:$contentsString';
   }
 }
 

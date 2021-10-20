@@ -29,12 +29,27 @@ public class SwiftCryptSignaturePlugin: NSObject, FlutterPlugin {
             let path = args?["pathToCert"];
             let password = args?["password"];
             
-//            let cString = path.cString(using: String.defaultCStringEncoding)!
-//            let newString:String = NSString(bytes: cString, length: Int(path.characters.count), encoding:String.Encoding.ascii.rawValue)! as String
-//            let key2Pointer = UnsafePointer<Int8>(newString)
-            
             let resulty = addCert(path, password);
-            //if (resulty == nil) result
+            
+            if (resulty == nil) {
+                result(FlutterError(code: "ERROR", message: "Не удалось добавить сертификат", details: nil));
+            } else {
+                result(resulty);
+            }
+        }
+        
+        if (call.method == "sign") {
+            let alias = args?["id"];
+            let password = args?["password"];
+            let data = args?["data"];
+            
+            let resulty = sign(alias, password, data);
+            
+            if (resulty == nil) {
+                result(FlutterError(code: "ERROR", message: "Не удалось подписать данные", details: nil));
+            } else {
+                result(resulty);
+            }
         }
         
         result(FlutterMethodNotImplemented);

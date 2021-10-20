@@ -78,8 +78,8 @@ class Validity {
   @override
   String toString([String prefix = '']) {
     var buffer = StringBuffer();
-    buffer.writeln('${prefix}Not Before: ${notBefore}');
-    buffer.writeln('${prefix}Not After: ${notAfter}');
+    buffer.writeln('${prefix}Not Before: $notBefore');
+    buffer.writeln('${prefix}Not After: $notAfter');
     return buffer.toString();
   }
 }
@@ -140,7 +140,7 @@ class AlgorithmIdentifier {
 
   @override
   String toString() =>
-      "${algorithm}${parameters == null ? "" : "($parameters)"}";
+      "$algorithm${parameters == null ? "" : "($parameters)"}";
 }
 
 class PrivateKeyInfo {

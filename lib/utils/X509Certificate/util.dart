@@ -72,7 +72,7 @@ Identifier _curveObjectIdentifierToIdentifier(ObjectIdentifier id) {
     'secp521r1': curves.p521,
   }[id.name];
   if (curve == null) {
-    throw UnsupportedError('Curves of type ${id} not supported');
+    throw UnsupportedError('Curves of type $id not supported');
   }
   return curve;
 }
@@ -166,7 +166,7 @@ String keyToString(Key key, [String prefix = '']) {
     var buffer = StringBuffer();
     var l = key.modulus.bitLength;
     buffer.writeln('${prefix}Modulus ($l bit):');
-    buffer.writeln(toHexString(key.modulus, '${prefix}\t', 15));
+    buffer.writeln(toHexString(key.modulus, '$prefix\t', 15));
     buffer.writeln('${prefix}Exponent: ${key.exponent}');
     return buffer.toString();
   }

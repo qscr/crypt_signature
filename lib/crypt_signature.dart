@@ -52,7 +52,8 @@ class CryptSignature {
     return result;
   }
 
-  static void clear() {
-    CryptSignature.sharedPreferences.clear();
+  static Future clear() async {
+    if (CryptSignature.sharedPreferences != null)
+      await CryptSignature.sharedPreferences.clear();
   }
 }

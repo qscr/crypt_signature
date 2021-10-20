@@ -48,6 +48,6 @@ class CertificationRequestInfo {
         toDart(sequence.elements[0]).toInt() + 1,
         Name.fromAsn1(sequence.elements[1] as ASN1Sequence),
         SubjectPublicKeyInfo.fromAsn1(sequence.elements[2] as ASN1Sequence),
-        null /*TODO*/);
+        null);
   }
 }
