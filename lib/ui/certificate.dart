@@ -1,76 +1,79 @@
-import 'dart:convert';
-
 import 'package:api_event/models/api_response.dart';
 import 'package:crypt_signature/bloc/native.dart';
 import 'package:crypt_signature/bloc/ui.dart';
 import 'package:crypt_signature/crypt_signature.dart';
 import 'package:crypt_signature/models/certificate.dart';
-import 'package:crypt_signature/ui/error.dart';
+import 'package:crypt_signature/models/sign_result.dart';
+import 'package:crypt_signature/ui/dialogs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CertificateWidget extends StatelessWidget {
   final Certificate certificate;
-  final Future<String> Function(String rawCertificate) onCertificateSelected;
+  final Future<String> Function(Certificate certificate) onCertificateSelected;
   final void Function(Certificate) removeCallback;
 
   const CertificateWidget(this.certificate, this.removeCallback,
       {Key key, this.onCertificateSelected})
       : super(key: key);
 
-      signData(Certificate certificate, BuildContext context) async {
-      String password = await showInputDialog(
-          context,
-          "Введите пароль для\n доступа к контейнеру приватного ключа",
-          "Пароль",
-          true,
-          TextInputType.visiblePassword);
+  void signData(Certificate certificate, BuildContext context) async {
+    String password = await showInputDialog(
+        context,
+        "Введите пароль для\n доступа к контейнеру приватного ключа",
+        "Пароль",
+        true,
+        TextInputType.visiblePassword);
 
-      if (password != null && password.isNotEmpty) {
-        UI.lockScreen();
-        ApiResponse response = await Native.sign(certificate, password);
-        await Future.delayed(Duration(seconds: 1));
-        UI.unlockScreen();
-
-        if (response.status == Status.COMPLETED) {
-          Navigator.of(CryptSignature.rootContext).pop(response.data);
-        } else
-          showError(context,
-              "Возникла ошибка во время подписи.\nПроверьте правильность введенного пароля",
-              details: response.message);
-      }
-    }
-
-    sign(Certificate certificate, BuildContext context) async {
+    if (password != null && password.isNotEmpty) {
       UI.lockScreen();
-      Native.data = await onCertificateSelected(json.encode(certificate));
+      ApiResponse response = await Native.sign(certificate, password);
+      await Future.delayed(Duration(seconds: 1));
       UI.unlockScreen();
 
-      if (Native.data == null) {
-        showError(context, "Возникла ошибка во время подписи");
-        return;
-      }
-
-      String password = await showInputDialog(
-          context,
-          "Введите пароль для\n доступа к контейнеру приватного ключа",
-          "Пароль",
-          true,
-          TextInputType.visiblePassword);
-
-      if (password != null && password.isNotEmpty) {
-        UI.lockScreen();
-        ApiResponse response = await Native.sign(certificate, password);
-        await Future.delayed(Duration(seconds: 1));
-        UI.unlockScreen();
-        if (response.status == Status.COMPLETED) {
-          Navigator.of(CryptSignature.rootContext).pop(response.data);
-        } else
-          showError(context,
-              "Возникла ошибка во время подписи.\nПроверьте правильность введенного пароля",
-              details: response.message);
-      }
+      if (response.status == Status.COMPLETED) {
+        SignResult signResult =
+            SignResult(certificate, Native.data, response.data);
+        Navigator.of(CryptSignature.rootContext).pop(signResult);
+      } else
+        showError(context,
+            "Возникла ошибка во время подписи.\nПроверьте правильность введенного пароля",
+            details: response.message);
     }
+  }
+
+  void sign(Certificate certificate, BuildContext context) async {
+    UI.lockScreen();
+    Native.data = await onCertificateSelected(certificate);
+    UI.unlockScreen();
+
+    if (Native.data == null) {
+      showError(context, "Возникла ошибка во время подписи");
+      return;
+    }
+
+    String password = await showInputDialog(
+        context,
+        "Введите пароль для\n доступа к контейнеру приватного ключа",
+        "Пароль",
+        true,
+        TextInputType.visiblePassword);
+
+    if (password != null && password.isNotEmpty) {
+      UI.lockScreen();
+      ApiResponse response = await Native.sign(certificate, password);
+      await Future.delayed(Duration(seconds: 1));
+      UI.unlockScreen();
+      if (response.status == Status.COMPLETED) {
+        SignResult signResult =
+            SignResult(certificate, Native.data, response.data);
+        Navigator.of(CryptSignature.rootContext).pop(signResult);
+      } else
+        showError(context,
+            "Возникла ошибка во время подписи.\nПроверьте правильность введенного пароля",
+            details: response.message);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

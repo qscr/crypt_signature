@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:api_event/api_event.dart';
 import 'package:crypt_signature/bloc/native.dart';
 import 'package:crypt_signature/crypt_signature.dart';
-import 'package:crypt_signature/ui/error.dart';
+import 'package:crypt_signature/models/certificate.dart';
+import 'package:crypt_signature/ui/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,7 +15,7 @@ import 'certificates.dart';
 class Home extends StatefulWidget {
   final String title;
   final String hint;
-  final Future<String> Function(String rawCertificate) onCertificateSelected;
+  final Future<String> Function(Certificate certificate) onCertificateSelected;
   const Home(
       {Key key,
       this.onCertificateSelected,
