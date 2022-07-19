@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables, library_private_types_in_public_api
+
 import 'package:crypt_signature/crypt_signature.dart';
 import 'package:crypt_signature/models/interface_request.dart';
 import 'package:crypt_signature/models/pkcs7.dart';
@@ -38,12 +40,12 @@ class _MyHomePageState extends State<MyHomePage> {
   String data = "0J/Rg9GC0LjQvSDQstC+0YA=";
 
   Future<String> getMessage(Certificate certificate) async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     return data;
   }
 
   Future<String> getDigest(Certificate certificate) async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     return data;
   }
 
@@ -53,11 +55,30 @@ class _MyHomePageState extends State<MyHomePage> {
   //   return response.data.signedAttributes;
   // }
 
+  void showResultDialog(String data) {
+    if (data == null) return;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          titlePadding: const EdgeInsets.symmetric(vertical: 20.0),
+          contentPadding: const EdgeInsets.only(left: 20, right: 20.0, bottom: 20.0, top: 20.0),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+          content: Text(
+            data,
+            style: const TextStyle(fontSize: 12, color: Colors.black87),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Signature"),
+        title: const Text("Signature"),
         centerTitle: true,
       ),
       body: Center(
@@ -70,25 +91,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 SignResult result =
                     await CryptSignature.interface(context, MessageInterfaceRequest(data), title: "Войти по сертификату", hint: "Выберите сертификат");
 
-                print(result?.signature);
+                showResultDialog(result?.signature);
               },
-              child: Text("MessageInterfaceRequest"),
+              child: const Text("MessageInterfaceRequest"),
             ),
             OutlinedButton(
               onPressed: () async {
                 PKCS7 result = await CryptSignature.interface(context, PKCS7InterfaceRequest(getMessage));
 
-                print(result?.content);
+                showResultDialog(result?.content);
               },
-              child: Text("PKCS7InterfaceRequest"),
+              child: const Text("PKCS7InterfaceRequest"),
             ),
             OutlinedButton(
               onPressed: () async {
                 PKCS7 result = await CryptSignature.interface(context, PKCS7HASHInterfaceRequest(getDigest));
 
-                print(result?.content);
+                showResultDialog(result?.content);
               },
-              child: Text("PKCS7HASHInterfaceRequest"),
+              child: const Text("PKCS7HASHInterfaceRequest"),
             ),
           ],
         ),

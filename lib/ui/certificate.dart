@@ -35,12 +35,13 @@ class CertificateWidget extends StatelessWidget {
   bool getLicenseStatus(BuildContext context) => InheritedLicense.of(context).license?.status;
 
   Future<void> _sign(BuildContext context) async {
-    bool licenseStatus = getLicenseStatus(context);
-    if (licenseStatus == null || !licenseStatus) {
-      await showError(context, "Лицензия не установлена");
-      InheritedLicense.of(context).setNewLicenseSheet();
-      return;
-    }
+    // Проверка, если лицензия не установлена, то дальше не пускаем
+    // bool licenseStatus = getLicenseStatus(context);
+    // if (licenseStatus == null || !licenseStatus) {
+    //   await showError(context, "Лицензия не установлена");
+    //   InheritedLicense.of(context).setNewLicenseSheet();
+    //   return;
+    // }
 
     String password = await _askPassword(context);
 
