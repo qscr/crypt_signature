@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:asn1lib/asn1lib.dart';
-import 'package:crypt_signature/utils/X509Certificate/x509_base.dart';
+import 'package:crypt_signature_null_safety_null_safety/utils/X509Certificate/x509_base.dart';
 import 'package:crypto_keys/crypto_keys.dart' hide AlgorithmIdentifier;
 import 'objectidentifier.dart';
 
@@ -58,7 +58,8 @@ KeyPair ecKeyPairFromAsn1(ASN1Sequence sequence) {
     publicKey = ecPublicKeyFromAsn1(e, curve: curve);
   }
 
-  return KeyPair(privateKey: EcPrivateKey(eccPrivateKey: privateKey, curve: curve), publicKey: publicKey);
+  return KeyPair(
+      privateKey: EcPrivateKey(eccPrivateKey: privateKey, curve: curve), publicKey: publicKey);
 }
 
 Identifier _curveObjectIdentifierToIdentifier(ObjectIdentifier id) {
@@ -84,7 +85,11 @@ KeyPair rsaKeyPairFromAsn1(ASN1Sequence sequence) {
   // var exponent1 = _toDart(sequence.elements[6]);
   // var exponent2 = _toDart(sequence.elements[7]);
   // var coefficient = _toDart(sequence.elements[8]);
-  var privateKey = RsaPrivateKey(modulus: modulus, privateExponent: privateExponent, firstPrimeFactor: prime1, secondPrimeFactor: prime2);
+  var privateKey = RsaPrivateKey(
+      modulus: modulus,
+      privateExponent: privateExponent,
+      firstPrimeFactor: prime1,
+      secondPrimeFactor: prime2);
   var publicKey = RsaPublicKey(modulus: modulus, exponent: publicExponent);
   return KeyPair(publicKey: publicKey, privateKey: privateKey);
 }
@@ -145,7 +150,8 @@ PublicKey publicKeyFromAsn1(ASN1BitString data, AlgorithmIdentifier algorithm) {
       var s = ASN1Parser(data.contentBytes()).nextObject() as ASN1Sequence;
       return rsaPublicKeyFromAsn1(s);
     case 'ecPublicKey':
-      return ecPublicKeyFromAsn1(data, curve: _curveObjectIdentifierToIdentifier(algorithm.parameters));
+      return ecPublicKeyFromAsn1(data,
+          curve: _curveObjectIdentifierToIdentifier(algorithm.parameters));
     case 'sha1WithRSAEncryption':
   }
   return null; //throw UnimplementedError('Unknown algoritmh $algorithm');
@@ -251,11 +257,14 @@ String toHexString(BigInt v, [String prefix = '', int bytesPerLine = 15]) {
   }
   var buffer = StringBuffer();
   for (var i = 0; i < str.length; i += bytesPerLine * 2) {
-    var l = Iterable.generate(str.length - i < bytesPerLine * 2 ? (str.length - i) ~/ 2 : bytesPerLine, (j) => str.substring(i + j * 2, i + j * 2 + 2));
+    var l = Iterable.generate(
+        str.length - i < bytesPerLine * 2 ? (str.length - i) ~/ 2 : bytesPerLine,
+        (j) => str.substring(i + j * 2, i + j * 2 + 2));
     var s = l.join(':');
     buffer.writeln('$prefix$s${str.length - i <= bytesPerLine * 2 ? '' : ':'}');
   }
   return buffer.toString();
 }
 
-BigInt toBigInt(List<int> bytes) => bytes.fold(BigInt.zero, (a, b) => a * BigInt.from(256) + BigInt.from(b));
+BigInt toBigInt(List<int> bytes) =>
+    bytes.fold(BigInt.zero, (a, b) => a * BigInt.from(256) + BigInt.from(b));

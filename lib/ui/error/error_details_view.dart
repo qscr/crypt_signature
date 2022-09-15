@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 class ErrorDetailsView extends StatefulWidget {
   final String details;
-  const ErrorDetailsView(this.details, {Key key}) : super(key: key);
+  const ErrorDetailsView(this.details, {Key? key}) : super(key: key);
 
   @override
   _ErrorDetailsViewState createState() => _ErrorDetailsViewState();
@@ -15,7 +15,7 @@ class _ErrorDetailsViewState extends State<ErrorDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.details == null || widget.details.isEmpty) return Container();
+    if (widget.details.isEmpty) return Container();
 
     return isDetailsOpen
         ? Flexible(
@@ -30,26 +30,32 @@ class _ErrorDetailsViewState extends State<ErrorDetailsView> {
                       onPressed: () => setState(() {
                         isDetailsOpen = false;
                       }),
-                      child: Text("Скрыть", style: TextStyle(color: Colors.blue[700], fontSize: 15.0)),
+                      child:
+                          Text("Скрыть", style: TextStyle(color: Colors.blue[700], fontSize: 15.0)),
                     ),
                     TextButton(
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: widget.details));
                       },
-                      child: Text("Скопировать", style: TextStyle(color: Colors.blue[700], fontSize: 15.0)),
+                      child: Text("Скопировать",
+                          style: TextStyle(color: Colors.blue[700], fontSize: 15.0)),
                     ),
                   ],
                 ),
                 Flexible(
                   child: Container(
-                    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.25),
+                    constraints:
+                        BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.25),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     margin: const EdgeInsets.only(bottom: 10.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: Colors.white,
                       boxShadow: [
-                        BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 0.5, spreadRadius: 0.05),
+                        BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 0.5,
+                            spreadRadius: 0.05),
                         BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 2.0),
                       ],
                     ),

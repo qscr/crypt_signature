@@ -1,17 +1,17 @@
 import 'dart:io';
 
-import 'package:crypt_signature/crypt_signature_icons_icons.dart';
-import 'package:crypt_signature/models/license.dart';
-import 'package:crypt_signature/ui/license/inherited_license.dart';
-import 'package:crypt_signature/ui/loading_widget.dart';
+import 'package:crypt_signature_null_safety/crypt_signature_icons_icons.dart';
+import 'package:crypt_signature_null_safety/models/license.dart';
+import 'package:crypt_signature_null_safety/ui/license/inherited_license.dart';
+import 'package:crypt_signature_null_safety/ui/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class LicenseWidget extends StatelessWidget {
-  const LicenseWidget({Key key}) : super(key: key);
+  const LicenseWidget({Key? key}) : super(key: key);
 
   static const Map<String, String> types = {"0": "день", "1": "дня", "2": "дней"};
 
-  String getNumSign(int num) {
+  String? getNumSign(int num) {
     String numString = num.toString();
     int lastChar = int.parse(numString[numString.length - 1]);
     if (num > 10 && num < 20) return types["2"];
@@ -23,14 +23,15 @@ class LicenseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Platform.isIOS) return Container();
-    License license = InheritedLicense.of(context).license;
+    License? license = InheritedLicense.of(context)?.license;
 
     if (license == null) return const LoadingWidget();
 
     String successMessage;
     try {
       if (license.expiredThroughDays < 0) throw Exception();
-      successMessage = "Лицензия активна и истекает через ${license.expiredThroughDays} ${getNumSign(license.expiredThroughDays)}";
+      successMessage =
+          "Лицензия активна и истекает через ${license.expiredThroughDays} ${getNumSign(license.expiredThroughDays)}";
     } catch (_) {
       successMessage = "Лицензия активна";
     }
@@ -49,14 +50,18 @@ class LicenseWidget extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: SelectableText(
                           license.serialNumber,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                         ),
                       ),
                     ),
                     const Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
                     TextButton(
                       onPressed: () {
-                        InheritedLicense.of(context).setNewLicenseSheet();
+                        InheritedLicense.of(context)?.setNewLicenseSheet?.call();
                       },
                       child: const Text(
                         "Изменить",
@@ -108,7 +113,7 @@ class LicenseWidget extends StatelessWidget {
                 const Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
                 TextButton(
                   onPressed: () {
-                    InheritedLicense.of(context).setNewLicenseSheet();
+                    InheritedLicense.of(context)?.setNewLicenseSheet?.call();
                   },
                   child: const Text(
                     "Изменить",

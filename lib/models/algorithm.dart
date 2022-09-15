@@ -31,16 +31,22 @@ class Algorithm {
   final String publicKeyOID;
   final String signatureOID;
 
-  Algorithm({this.name, this.hashOID, this.publicKeyOID, this.signatureOID});
+  Algorithm(
+      {required this.name,
+      required this.hashOID,
+      required this.publicKeyOID,
+      required this.signatureOID});
 
   static Algorithm findAlgorithmByPublicKeyOID(String publicKeyOID) {
     if (publicKeyOID == null) return algorithms.last;
 
     final String formatedPublicKeyOID = formatOID(publicKeyOID);
-    return algorithms.firstWhere((algorithm) => algorithm.publicKeyOID == formatedPublicKeyOID, orElse: () => algorithms.last);
+    return algorithms.firstWhere((algorithm) => algorithm.publicKeyOID == formatedPublicKeyOID,
+        orElse: () => algorithms.last);
   }
 
-  static String formatOID(String rawOID) => rawOID.replaceAll("[", "").replaceAll("]", "").replaceAll(" ", "").replaceAll(",", ".");
+  static String formatOID(String rawOID) =>
+      rawOID.replaceAll("[", "").replaceAll("]", "").replaceAll(" ", "").replaceAll(",", ".");
 
   Map<String, String> toJson() => {
         'name': name,

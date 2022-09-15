@@ -1,4 +1,4 @@
-import 'package:crypt_signature/models/certificate.dart';
+import 'package:crypt_signature_null_safety/models/certificate.dart';
 
 /// Результат хэширования
 class DigestResult {
@@ -14,5 +14,9 @@ class DigestResult {
   /// Алгоритм хэширования
   final String digestAlgorithm;
 
-  DigestResult({this.certificate, this.message, this.digest, this.digestAlgorithm});
+  DigestResult(
+      {required this.certificate,
+      required this.message,
+      required this.digest,
+      required this.digestAlgorithm});
 }

@@ -1,5 +1,5 @@
 import 'package:asn1lib/asn1lib.dart';
-import 'package:crypt_signature/utils/X509Certificate/util.dart';
+import 'package:crypt_signature_null_safety_null_safety/utils/X509Certificate/util.dart';
 import 'package:crypto_keys/crypto_keys.dart' hide AlgorithmIdentifier;
 
 import 'x509_base.dart';
@@ -35,7 +35,8 @@ class X509Certificate implements Certificate {
   ///     signatureValue       BIT STRING  }
   factory X509Certificate.fromAsn1(ASN1Sequence sequence) {
     final algorithm = AlgorithmIdentifier.fromAsn1(sequence.elements[1] as ASN1Sequence);
-    return X509Certificate(TbsCertificate.fromAsn1(sequence.elements[0] as ASN1Sequence), algorithm, toDart(sequence.elements[2]));
+    return X509Certificate(TbsCertificate.fromAsn1(sequence.elements[0] as ASN1Sequence), algorithm,
+        toDart(sequence.elements[2]));
   }
 
   ASN1Sequence toAsn1() {
@@ -167,7 +168,9 @@ class TbsCertificate {
     if (version != 1) {
       var v = ASN1Integer(BigInt.from(version - 1));
       var o = ASN1Object.preEncoded(0xa0, v.encodedBytes);
-      var b = o.encodedBytes..setRange(o.encodedBytes.length - v.encodedBytes.length, o.encodedBytes.length, v.encodedBytes);
+      var b = o.encodedBytes
+        ..setRange(
+            o.encodedBytes.length - v.encodedBytes.length, o.encodedBytes.length, v.encodedBytes);
       o = ASN1Object.fromBytes(b);
       seq.add(o);
     }

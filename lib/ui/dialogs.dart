@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-Future<String> showInputDialog(
+Future<String?> showInputDialog(
   BuildContext context,
   String message,
   String hintText,
   TextInputType keyboardType, {
-  List<TextInputFormatter> inputFormatters,
+  List<TextInputFormatter>? inputFormatters,
   bool obscureText = false,
 }) async {
-  String value = await showDialog(
+  String? value = await showDialog<String>(
     context: context,
     builder: (BuildContext context) {
       TextEditingController controller = TextEditingController();
@@ -34,7 +34,8 @@ Future<String> showInputDialog(
               keyboardType: keyboardType,
               obscureText: obscureText,
               textAlign: TextAlign.center,
-              style: TextStyle(decoration: TextDecoration.none, decorationColor: Colors.white.withOpacity(0)),
+              style: TextStyle(
+                  decoration: TextDecoration.none, decorationColor: Colors.white.withOpacity(0)),
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding: const EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
@@ -43,7 +44,9 @@ Future<String> showInputDialog(
                 hintMaxLines: 1,
                 hintText: hintText,
                 hintStyle: const TextStyle(color: Color.fromRGBO(134, 145, 173, 1), fontSize: 14.0),
-                border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10.0)), borderSide: BorderSide.none),
+                border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide.none),
               ),
             ),
             const Padding(padding: EdgeInsets.symmetric(vertical: 5.0)),
@@ -67,7 +70,7 @@ Future<String> showInputDialog(
   return value;
 }
 
-Future showError(BuildContext context, String message, {String details}) {
+Future showError(BuildContext context, String message, {String? details}) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {

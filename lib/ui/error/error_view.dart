@@ -1,12 +1,12 @@
-import 'package:crypt_signature/exceptions/api_response_exception.dart';
-import 'package:crypt_signature/ui/error/error_details_view.dart';
+import 'package:crypt_signature_null_safety/exceptions/api_response_exception.dart';
+import 'package:crypt_signature_null_safety/ui/error/error_details_view.dart';
 import 'package:flutter/material.dart';
 
 class ErrorView extends StatelessWidget {
-  const ErrorView(this.state, {Key key, this.onRepeat}) : super(key: key);
+  const ErrorView(this.state, {Key? key, this.onRepeat}) : super(key: key);
 
   final ApiResponseException state;
-  final void Function() onRepeat;
+  final void Function()? onRepeat;
 
   @override
   Widget build(BuildContext context) {

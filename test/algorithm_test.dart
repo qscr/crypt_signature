@@ -1,4 +1,4 @@
-import 'package:crypt_signature/models/algorithm.dart';
+import 'package:crypt_signature_null_safety/models/algorithm.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -18,7 +18,7 @@ void main() {
     });
 
     test('Поиск алгоритма по null OID', () {
-      String publicKeyOID;
+      String publicKeyOID = '';
       Algorithm algorithm = Algorithm.findAlgorithmByPublicKeyOID(publicKeyOID);
 
       expect(algorithm.name, "Неизвестен");

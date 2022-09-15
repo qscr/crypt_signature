@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:asn1lib/asn1lib.dart';
-import 'package:crypt_signature/utils/X509Certificate/util.dart';
+import 'package:crypt_signature_null_safety_null_safety/utils/X509Certificate/util.dart';
 import 'package:flutter/foundation.dart';
 
 import 'objectidentifier.dart';
@@ -23,7 +23,7 @@ class Extension {
   /// The extension's value.
   final ExtensionValue extnValue;
 
-  const Extension({@required this.extnId, this.isCritical = false, @required this.extnValue});
+  const Extension({required this.extnId, this.isCritical = false, required this.extnValue});
 
   /// Creates a Extension from an [ASN1Sequence].
   ///
@@ -46,7 +46,10 @@ class Extension {
       octetIndex = 2;
     }
     return Extension(
-        extnId: id, isCritical: critical, extnValue: ExtensionValue.fromAsn1(ASN1Parser(sequence.elements[octetIndex].contentBytes()).nextObject(), id));
+        extnId: id,
+        isCritical: critical,
+        extnValue: ExtensionValue.fromAsn1(
+            ASN1Parser(sequence.elements[octetIndex].contentBytes()).nextObject(), id));
   }
 
   @override
@@ -114,7 +117,8 @@ class AuthorityKeyIdentifier extends ExtensionValue {
   final authorityCertIssuer;
   final BigInt authorityCertSerialNumber;
 
-  AuthorityKeyIdentifier(this.keyIdentifier, this.authorityCertIssuer, this.authorityCertSerialNumber);
+  AuthorityKeyIdentifier(
+      this.keyIdentifier, this.authorityCertIssuer, this.authorityCertSerialNumber);
 
   /// Creates an authority key identifier extension value from an [ASN1Sequence].
   ///
@@ -137,7 +141,8 @@ class AuthorityKeyIdentifier extends ExtensionValue {
           issuer = o;
           break;
         case 2:
-          number = (ASN1Parser(o.encodedBytes..[0] = 2).nextObject() as ASN1Integer).valueAsBigInteger;
+          number =
+              (ASN1Parser(o.encodedBytes..[0] = 2).nextObject() as ASN1Integer).valueAsBigInteger;
       }
     }
     return AuthorityKeyIdentifier(keyId, issuer, number);
@@ -243,7 +248,12 @@ class KeyUsage extends ExtensionValue {
   ///     encipherOnly            (7),
   ///     decipherOnly            (8) }
   factory KeyUsage.fromAsn1(ASN1BitString bitString) {
-    var bits = bitString.stringValue.map((v) => (v + 256).toRadixString(2).substring(1)).join().split('').map((v) => v == '1').toList();
+    var bits = bitString.stringValue
+        .map((v) => (v + 256).toRadixString(2).substring(1))
+        .join()
+        .split('')
+        .map((v) => v == '1')
+        .toList();
     bits = bits.take(bits.length - bitString.unusedbits).toList();
     bits.addAll(Iterable.generate(9, (_) => false));
     bits = bits.take(9).toList();
@@ -260,7 +270,8 @@ class KeyUsage extends ExtensionValue {
   }
 
   @override
-  String toString() => [digitalSignature ? 'Digital Signature' : null].where((v) => v != null).join(',');
+  String toString() =>
+      [digitalSignature ? 'Digital Signature' : null].where((v) => v != null).join(',');
 }
 
 /// This extension indicates one or more purposes for which the certified
@@ -327,7 +338,8 @@ class CertificatePolicies extends ExtensionValue {
   ///
   ///   CertificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
   factory CertificatePolicies.fromAsn1(ASN1Sequence sequence) {
-    return CertificatePolicies(policies: [for (var e in sequence.elements) PolicyInformation.fromAsn1(e as ASN1Sequence)]);
+    return CertificatePolicies(
+        policies: [for (var e in sequence.elements) PolicyInformation.fromAsn1(e as ASN1Sequence)]);
   }
 
   @override
@@ -350,9 +362,12 @@ class PolicyInformation {
     var policyIdentifier = toDart(sequence.elements[0]);
     var policyQualifiers = <PolicyQualifierInfo>[];
     if (sequence.elements.length > 1) {
-      policyQualifiers.addAll((sequence.elements[1] as ASN1Sequence).elements.map((e) => PolicyQualifierInfo.fromAsn1(e as ASN1Sequence)));
+      policyQualifiers.addAll((sequence.elements[1] as ASN1Sequence)
+          .elements
+          .map((e) => PolicyQualifierInfo.fromAsn1(e as ASN1Sequence)));
     }
-    return PolicyInformation(policyIdentifier: policyIdentifier, policyQualifiers: policyQualifiers);
+    return PolicyInformation(
+        policyIdentifier: policyIdentifier, policyQualifiers: policyQualifiers);
   }
 
   @override
@@ -371,7 +386,8 @@ class PolicyQualifierInfo {
 
   final UserNotice userNotice;
 
-  PolicyQualifierInfo({@required this.policyQualifierId, this.cpsUri, this.userNotice}) : assert(cpsUri != null || userNotice != null);
+  PolicyQualifierInfo({@required this.policyQualifierId, this.cpsUri, this.userNotice})
+      : assert(cpsUri != null || userNotice != null);
 
   /// The ASN.1 definition is:
   ///
@@ -386,7 +402,9 @@ class PolicyQualifierInfo {
         var cpsUri = toDart(sequence.elements[1]);
         return PolicyQualifierInfo(policyQualifierId: policyQualifierId, cpsUri: cpsUri);
       case 2: // unotice
-        return PolicyQualifierInfo(policyQualifierId: policyQualifierId, userNotice: UserNotice.fromAsn1(sequence.elements[1] as ASN1Sequence));
+        return PolicyQualifierInfo(
+            policyQualifierId: policyQualifierId,
+            userNotice: UserNotice.fromAsn1(sequence.elements[1] as ASN1Sequence));
     }
     return null;
   }
@@ -453,7 +471,8 @@ class NoticeReference {
   ///     organization     DisplayText,
   ///     noticeNumbers    SEQUENCE OF INTEGER }
   factory NoticeReference.fromAsn1(ASN1Sequence sequence) {
-    return NoticeReference(organization: toDart(sequence.elements[0]), noticeNumbers: toDart(sequence.elements[1]));
+    return NoticeReference(
+        organization: toDart(sequence.elements[0]), noticeNumbers: toDart(sequence.elements[1]));
   }
 
   @override
@@ -470,7 +489,8 @@ class CrlDistributionPoints extends ExtensionValue {
   ///
   ///   CRLDistributionPoints ::= SEQUENCE SIZE (1..MAX) OF DistributionPoint
   factory CrlDistributionPoints.fromAsn1(ASN1Sequence sequence) {
-    return CrlDistributionPoints(points: [for (var e in sequence.elements) DistributionPoint.fromAsn1(e as ASN1Sequence)]);
+    return CrlDistributionPoints(
+        points: [for (var e in sequence.elements) DistributionPoint.fromAsn1(e as ASN1Sequence)]);
   }
 }
 
@@ -489,8 +509,12 @@ class DistributionPoint {
   ///     cRLIssuer               [2]     GeneralNames OPTIONAL }
   factory DistributionPoint.fromAsn1(ASN1Sequence sequence) {
     var name = sequence.elements.isEmpty ? null : toDart(sequence.elements[0]);
-    var reasons =
-        sequence.elements.length <= 1 ? null : (sequence.elements[1] as ASN1BitString).valueBytes().map((v) => DistributionPointReason.values[v]).toList();
+    var reasons = sequence.elements.length <= 1
+        ? null
+        : (sequence.elements[1] as ASN1BitString)
+            .valueBytes()
+            .map((v) => DistributionPointReason.values[v])
+            .toList();
 
     var crlIssuer = sequence.elements.length <= 2 ? null : toDart(sequence.elements[2]);
     return DistributionPoint(name: name, reasons: reasons, crlIssuer: crlIssuer);
@@ -525,7 +549,9 @@ class AuthorityInformationAccess extends ExtensionValue {
   ///   AuthorityInfoAccessSyntax  ::=
   ///     SEQUENCE SIZE (1..MAX) OF AccessDescription
   factory AuthorityInformationAccess.fromAsn1(ASN1Sequence sequence) {
-    return AuthorityInformationAccess(descriptions: [for (var e in sequence.elements) AccessDescription.fromAsn1(e as ASN1Sequence)]);
+    return AuthorityInformationAccess(descriptions: [
+      for (var e in sequence.elements) AccessDescription.fromAsn1(e as ASN1Sequence)
+    ]);
   }
 }
 
@@ -540,7 +566,8 @@ class AccessDescription {
   ///     accessMethod          OBJECT IDENTIFIER,
   ///     accessLocation        GeneralName  }
   factory AccessDescription.fromAsn1(ASN1Sequence sequence) {
-    return AccessDescription(accessMethod: toDart(sequence.elements[0]), accessLocation: toDart(sequence.elements[1]));
+    return AccessDescription(
+        accessMethod: toDart(sequence.elements[0]), accessLocation: toDart(sequence.elements[1]));
   }
 }
 

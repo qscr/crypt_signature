@@ -1,38 +1,39 @@
 import 'dart:convert';
 
-import 'package:crypt_signature/crypt_signature.dart';
-import 'package:crypt_signature/utils/extensions.dart';
+import 'package:crypt_signature_null_safety/crypt_signature.dart';
+import 'package:crypt_signature_null_safety/utils/extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Локальное хранилище для моделей
 class Storage<T> {
   String key;
-  SharedPreferences sharedPreferences;
+  SharedPreferences? sharedPreferences;
   T Function(Map map) parser;
 
-  Storage({this.parser, String key}) : this.key = key ?? T.toString() {
+  Storage({required this.parser, String? key}) : this.key = key ?? T.toString() {
     sharedPreferences = CryptSignature.sharedPreferences;
   }
 
   List<T> get() {
-    String data = sharedPreferences.getString(key);
+    String? data = sharedPreferences?.getString(key);
 
     if (data == null) return <T>[];
 
     List list = json.decode(data) as List;
 
-    if (list == null || list.isEmpty) return <T>[];
+    if (list.isEmpty) return <T>[];
 
     List<T> objects = [];
 
     /// TODO: переделать парсер в compute
-    for (final object in list) objects.addNonNull(parser != null ? parser(object as Map) : object as T);
+    for (final object in list)
+      objects.addNonNull(parser != null ? parser(object as Map) : object as T);
 
     return objects;
   }
 
   void save(List<T> objects) {
-    sharedPreferences.setString(key, json.encode(objects));
+    sharedPreferences?.setString(key, json.encode(objects));
   }
 
   bool add(T object) {

@@ -2,10 +2,10 @@
 
 import 'dart:convert';
 
-import 'package:crypt_signature/crypt_signature.dart';
-import 'package:crypt_signature/models/interface_request.dart';
-import 'package:crypt_signature/models/sign_result.dart';
-import 'package:crypt_signature/models/certificate.dart';
+import 'package:crypt_signature_null_safety/crypt_signature.dart';
+import 'package:crypt_signature_null_safety/models/interface_request.dart';
+import 'package:crypt_signature_null_safety/models/sign_result.dart';
+import 'package:crypt_signature_null_safety/models/certificate.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -86,26 +86,29 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             OutlinedButton(
               onPressed: () async {
-                SignResult result =
-                    await CryptSignature.interface(context, MessageInterfaceRequest(base64.encode(utf8.encode("Данные на подпись"))), title: "Войти по сертификату", hint: "Выберите сертификат");
+                SignResult? result = await CryptSignature.interface(context,
+                    MessageInterfaceRequest(base64.encode(utf8.encode("Данные на подпись"))),
+                    title: "Войти по сертификату", hint: "Выберите сертификат") as SignResult?;
 
-                showResultDialog(result?.toString());
+                showResultDialog(result.toString());
               },
               child: const Text("MessageInterfaceRequest"),
             ),
             OutlinedButton(
               onPressed: () async {
-                Object result = await CryptSignature.interface(context, PKCS7InterfaceRequest(getMessage,getSignedAttributes: getSignedAttributes));
+                Object? result = await CryptSignature.interface(context,
+                    PKCS7InterfaceRequest(getMessage, getSignedAttributes: getSignedAttributes));
 
-                showResultDialog(result?.toString());
+                showResultDialog(result.toString());
               },
               child: const Text("PKCS7InterfaceRequest"),
             ),
             OutlinedButton(
               onPressed: () async {
-                Object result = await CryptSignature.interface(context, PKCS7HASHInterfaceRequest(getDigest, getSignedAttributes: getSignedAttributes));
+                Object? result = await CryptSignature.interface(context,
+                    PKCS7HASHInterfaceRequest(getDigest, getSignedAttributes: getSignedAttributes));
 
-                showResultDialog(result?.toString());
+                showResultDialog(result.toString());
               },
               child: const Text("PKCS7HASHInterfaceRequest"),
             ),

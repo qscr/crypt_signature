@@ -1,13 +1,13 @@
-import 'package:crypt_signature/exceptions/api_response_exception.dart';
-import 'package:crypt_signature/inherited_crypt_signature.dart';
-import 'package:crypt_signature/native/native.dart';
-import 'package:crypt_signature/ui/certificates.dart';
-import 'package:crypt_signature/ui/error/error_view.dart';
-import 'package:crypt_signature/ui/license/license_widget.dart';
-import 'package:crypt_signature/ui/license/license_wrapper.dart';
-import 'package:crypt_signature/ui/loading_widget.dart';
-import 'package:crypt_signature/ui/locker/locker_widget.dart';
-import 'package:crypt_signature/ui/locker/locker_wrapper.dart';
+import 'package:crypt_signature_null_safety/exceptions/api_response_exception.dart';
+import 'package:crypt_signature_null_safety/inherited_crypt_signature.dart';
+import 'package:crypt_signature_null_safety/native/native.dart';
+import 'package:crypt_signature_null_safety/ui/certificates.dart';
+import 'package:crypt_signature_null_safety/ui/error/error_view.dart';
+import 'package:crypt_signature_null_safety/ui/license/license_widget.dart';
+import 'package:crypt_signature_null_safety/ui/license/license_wrapper.dart';
+import 'package:crypt_signature_null_safety/ui/loading_widget.dart';
+import 'package:crypt_signature_null_safety/ui/locker/locker_widget.dart';
+import 'package:crypt_signature_null_safety/ui/locker/locker_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -16,7 +16,7 @@ class HomeWidget extends StatelessWidget {
   final String hint;
 
   const HomeWidget({
-    Key key,
+    Key? key,
     this.title = "Подпись",
     this.hint = "Выберите сертификат",
   }) : super(key: key);
@@ -33,7 +33,8 @@ class HomeWidget extends StatelessWidget {
           ),
           leading: GestureDetector(
             behavior: HitTestBehavior.translucent,
-            onTap: () => Navigator.of(InheritedCryptSignature.of(context).rootContext).pop(),
+            onTap: () =>
+                Navigator.of(InheritedCryptSignature.of(context)?.rootContext ?? context).pop(),
             child: Container(
               alignment: Alignment.centerRight,
               child: const Text(
@@ -62,10 +63,16 @@ class HomeWidget extends StatelessWidget {
                   FutureBuilder<bool>(
                     future: Native.initCSP(),
                     builder: (context, snapshot) {
-                      if (snapshot.hasError) return ErrorView(snapshot.error as ApiResponseException);
+                      if (snapshot.hasError)
+                        return ErrorView(snapshot.error as ApiResponseException);
                       if (!snapshot.hasData) return const LoadingWidget();
 
-                      return Column(children: [const LicenseWidget(), Expanded(child: Certificates(hint: hint))]);
+                      return Column(
+                        children: [
+                          const LicenseWidget(),
+                          Expanded(child: Certificates(hint: hint))
+                        ],
+                      );
                     },
                   ),
                   const LockerWidget(),

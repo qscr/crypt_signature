@@ -1,9 +1,9 @@
-import 'package:crypt_signature/ui/locker/inherited_locker.dart';
+import 'package:crypt_signature_null_safety/ui/locker/inherited_locker.dart';
 import 'package:flutter/material.dart';
 
 class LockerWrapper extends StatefulWidget {
   final Widget child;
-  const LockerWrapper({Key key, @required this.child}) : super(key: key);
+  const LockerWrapper({Key? key, required this.child}) : super(key: key);
 
   @override
   State<LockerWrapper> createState() => _LockerWrapperState();

@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:asn1lib/asn1lib.dart';
-import 'package:crypt_signature/utils/X509Certificate/util.dart';
+import 'package:crypt_signature_null_safety_null_safety/utils/X509Certificate/util.dart';
 
 import 'x509_base.dart';
 
@@ -11,8 +11,7 @@ class CertificationRequest {
   final AlgorithmIdentifier signatureAlgorithm;
   final Uint8List signature;
 
-  CertificationRequest(
-      this.certificationRequestInfo, this.signatureAlgorithm, this.signature);
+  CertificationRequest(this.certificationRequestInfo, this.signatureAlgorithm, this.signature);
 
   /// CertificationRequest ::= SEQUENCE {
   ///   certificationRequestInfo CertificationRequestInfo,
@@ -34,8 +33,7 @@ class CertificationRequestInfo {
   final SubjectPublicKeyInfo subjectPublicKeyInfo;
   final Map<String, List<dynamic>> attributes;
 
-  CertificationRequestInfo(
-      this.version, this.subject, this.subjectPublicKeyInfo, this.attributes);
+  CertificationRequestInfo(this.version, this.subject, this.subjectPublicKeyInfo, this.attributes);
 
   /// CertificationRequestInfo ::= SEQUENCE {
   ///   version       INTEGER { v1(0) } (v1,...),
